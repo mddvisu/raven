@@ -11,3 +11,6 @@ neutralino.js
 # Neutralinojs related files
 .storage
 *.log
+
+# Ignore temp files, these get automatically generated
+/.tmp
