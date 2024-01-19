@@ -37,12 +37,13 @@
       "minHeight": 200,
       "fullScreen": false,
       "alwaysOnTop": false,
-      "icon": "/public/logo192.png",
+      "icon": "/public/raven-logo.png",
       "enableInspector": true,
       "borderless": false,
       "maximize": false,
       "hidden": false,
-      "resizable": true
+      "resizable": true,
+      "exitProcessOnClose": true
     }
   },
   "cli": {

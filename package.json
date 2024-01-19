@@ -39,6 +39,7 @@
     ]
   },
   "devDependencies": {
+    "ajv": "^6.12.6",
     "java-parser": "^2.2.0"
   }
 }
