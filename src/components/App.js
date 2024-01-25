@@ -1,11 +1,11 @@
 import './App.css';
-import { SelectFolderPath } from '../logic/folderUtils';
+import { SelectJavaProjectDirectory } from '../logic/folderUtils';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <button onClick={SelectFolderPath}>Open Project Directory</button>
+        <button onClick={SelectJavaProjectDirectory}>Open Project Directory</button>
       </header>
     </div>
   );
