@@ -18,7 +18,8 @@
     "os.*",
     "events.*",
     "filesystem.*",
-    "debug.log"
+    "debug.log",
+    "window.*"
   ],
   "globalVariables": {
     "TEST1": "Hello",
@@ -34,15 +35,13 @@
   },
   "modes": {
     "window": {
-      "title": "myapp",
-      "width": 800,
-      "height": 500,
-      "minWidth": 400,
-      "minHeight": 200,
-      "center": true,
+      "title": "Raven",
+      "width": 1500,
+      "height": 800,
       "fullScreen": false,
+      "minWidth": 1200,
+      "minHeight": 800,
       "alwaysOnTop": false,
-      "icon": "/public/logo192.png",
       "enableInspector": true,
       "borderless": false,
       "maximize": false,
@@ -59,7 +58,7 @@
       ]
     },
     "cloud": {
-      "url": "/resources/#cloud",
+      "url": "/build/#cloud",
       "nativeAllowList": [
         "app.*"
       ]
@@ -78,7 +77,7 @@
     "binaryName": "myapp",
     "resourcesPath": "/build/",
     "extensionsPath": "/extensions/",
-    "clientLibrary": "/resources/js/neutralino.js",
+    "clientLibrary": "/build/neutralino.js",
     "binaryVersion": "5.0.0",
     "clientVersion": "5.0.0"
   }
