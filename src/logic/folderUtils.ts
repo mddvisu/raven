@@ -9,8 +9,31 @@ import { os, filesystem } from "@neutralinojs/lib"
  */
 export async function SelectJavaProjectDirectory() {
   let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
-  let projectCode: string = await GetContentsOfDirectoryByExtension(projectDir, "java");
-  console.log(projectCode);
+
+  //let rootDirectoryItems: string[][] = await GetItemsInDirectory(projectDir);
+  let subdirectories = FindSubDirs([projectDir]);
+
+
+
+
+  //let projectCode: string = await GetContentsOfDirectoryByExtension(projectDir, "java");
+  //console.log(projectCode);
+  //let fgfgf = await filesystem.readFile("C:/Users/matt7/OneDrive/Desktop/Davis.java");
+  console.log(subdirectories);
+}
+
+// I hate recursion
+// return all java paths
+async function FindSubDirs (folders: string[]): Promise<string[]> {
+  let subdirs: string[] = [];
+  for (const item of folders) {
+    let itemsInSubdir: string[][] = await GetItemsInDirectory(item);
+    let subdirInSubdir: string[] = await FindSubDirs(itemsInSubdir[1]);
+    for (const sub of subdirInSubdir) {
+      subdirs.push(sub);
+    }
+  }
+  return subdirs;
 }
 
 /**
@@ -46,10 +69,11 @@ export async function GetItemsInDirectory(dir: string): Promise<string[][]> {
     if (item.type === "FILE") {
       fileArr.push(dir + "/" + item.entry);
     }
-    else if (item.type === "Directory") {
+    else if (item.type === "DIRECTORY") {
       dirArr.push(dir + "/" + item.entry);
     }
   }
+  console.log(fileArr);
   return [fileArr, dirArr];
 }
 
@@ -63,7 +87,8 @@ export async function GetItemsInDirectory(dir: string): Promise<string[][]> {
 export async function ReadFilesToString(files: string[]): Promise<string> {
   let fileStr: string = "";
   for (const file of files) {
-    fileStr += await filesystem.readFile(file) + "\n";
+    fileStr += await filesystem.readFile(file, {pos:0, size: 100000}) + "\n";
+    console.log(fileStr);
   }
   return fileStr;
 }
@@ -95,5 +120,6 @@ export function GetFilesOfExtension(files: string[], extension: string): string[
       retFiles.push(file)
     }
   }
+  console.log(retFiles);
   return retFiles;
 }
