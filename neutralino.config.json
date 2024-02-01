@@ -31,11 +31,11 @@
   "modes": {
     "window": {
       "title": "Raven",
-      "width": 800,
-      "height": 500,
+      "width": 1500,
+      "height": 800,
       "fullScreen": false,
-      "minWidth": 450,
-      "minHeight": 450,
+      "minWidth": 1200,
+      "minHeight": 800,
       "alwaysOnTop": false,
       "icon": "/public/raven-logo.png",
       "enableInspector": true,
