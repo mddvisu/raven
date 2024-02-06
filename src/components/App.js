@@ -1,5 +1,5 @@
 import './App.css';
-import { SelectJavaProjectDirectory } from '../logic/folderUtils';
+//import { SelectJavaProjectDirectory } from '../logic/folderUtils';
 import { Parsinator } from '../logic/parser.ts';
 
 

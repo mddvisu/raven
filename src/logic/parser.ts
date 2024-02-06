@@ -3,6 +3,38 @@ var mahboi = ["public", "abstract", "class", "Main", "{", "public", "static", "i
 // An array of tokens that describe a method, class, or attribute
 const descriptorTokens = ["public", "private", "protected", "abstract", "static"];
 
+// Data structure for a variable model
+interface VariableModel {
+    name: string,
+    value: any,
+    type: string,
+    access: string,
+    static: boolean,
+    final: boolean
+}
+
+// Data structure for a method model
+interface MethodModel {
+    name: string,
+    parameters: VariableModel[],
+    return: string,
+    static: boolean,
+    access: string,
+    final: boolean
+}
+
+// Data structure for a class model
+interface ClassModel {
+    name: string,
+    attributes: VariableModel[],
+    methods: MethodModel[],
+    abstract: boolean,
+    interface: boolean,
+    access: string,
+    superclass: string,
+    static: boolean,
+    implements: string[]
+}
 
 /**
  * Returns all of the tokens within a certian scope indicated by {}, [], (), "", '', or <>
@@ -98,17 +130,142 @@ export function LocateClasses(tokens: string[]): string[] {
  * 
  * @returns {string[]} - The object mentioned in the description
  */
- /*export function LocateMethodsAndAttributes(tokens: string[]): string[] {
-    let methods = [];
-    let attributes = [];
+export function LocateMethodsAndAttributes(tokens: string[]): string[] {
+    let methods: string[][][] = [[],[],[]];
+    let attributes: string[][] = [[],[]];
     let index = 0;
 
     while (index < tokens.length) {
         if (descriptorTokens.includes(tokens[index])) {
+            
+            let descriptors: string[] = [];
+            let parameters: string[] = [];
+            let content: string[] = [];
 
+
+            while (descriptorTokens.includes(tokens[index])) {
+                descriptors.push(tokens[index]);
+                index ++;
+            }
+
+            if (tokens[index] === "=") {
+                // this is an attribute that has been assigned a default value
+
+                // go until semicolon
+                index ++;
+                parameters = [];
+                while (tokens[index] !== ";") {
+                    parameters.push(tokens[index]);
+                    index ++;
+                }
+
+                attributes.push([descriptors, parameters]);
+
+            }
+            else if (tokens[index] === "(") {
+                // this is a method
+                parameters = GetTokensInScope(tokens, index);
+                index += parameters.length + 2;
+                while (tokens[index] !== "{") {
+                    index ++;
+                }
+                content = GetTokensInScope(tokens, index);
+                index += content.length + 2;
+                methods.push([descriptors, parameters, content]);
+            }
+            else if (tokens[index] === ";") {
+                attributes.push([descriptors, []]);
+            }
+        }
+        index ++;
+    }
+    return [attributes, methods];
+}
+
+
+export function CreateVariableModelFromTokens(descriptorTokens: string[], valueTokens: string[]): VariableModel {
+    let model: VariableModel = {name: "", value: undefined, type: "", access: "private", static: false, final: false};
+
+    for (const token of descriptorTokens) {
+        switch (token) {
+            case ("public" || "private" || "protected"):
+                model.access = token;
+                break;
+            case ("static"):
+                model.static = true;
+                break;
+            case ("final"):
+                model.final = true;
+                break;
         }
     }
-}*/
+
+    // TODO: Figure out if this breaks in any scenario
+    model.type = descriptorTokens[descriptorTokens.length - 2];
+    model.name = descriptorTokens[descriptorTokens.length - 1];
+
+    // TODO: Parse value tokens
+
+    return model;
+}
+
+export function CreateMethodModelFromTokens(descriptorTokens: string[], parameterTokens: string[]): MethodModel {
+    let model: MethodModel = {name: "", parameters: [], return: "", access: "private", static: false, final: false};
+
+    for (const token of descriptorTokens) {
+        switch (token) {
+            case ("public" || "private" || "protected"):
+                model.access = token;
+                break;
+            case ("static"):
+                model.static = true;
+                break;
+            case ("final"):
+                model.final = true;
+                break;
+        }
+    }
+
+    // TODO: Figure out if this breaks in any scenario
+    model.return = descriptorTokens[descriptorTokens.length - 2];
+    model.name = descriptorTokens[descriptorTokens.length - 1];
+
+    // TODO: Parse parameter tokens
+
+    return model;
+}
+
+export function CreateClassModelFromTokens(descriptorTokens: string[], contentTokens: string[]): ClassModel {
+    let model: ClassModel = {name: "", access: "public", static: false, abstract: false, interface: false, superclass: "", implements: [], attributes: [], methods: []};
+
+    for (const token of descriptorTokens) {
+        switch (token) {
+            case ("public" || "private" || "protected"):
+                model.access = token;
+                break;
+            case ("static"):
+                model.static = true;
+                break;
+            case ("abstract"):
+                model.abstract = true;
+                break;
+            case ("interface"):
+                model.interface = true;
+                break;
+            
+            
+        }
+    }
+
+    // TODO: Figure out if this breaks in any scenario
+    model.return = descriptorTokens[descriptorTokens.length - 2];
+    model.name = descriptorTokens[descriptorTokens.length - 1];
+
+    // TODO: Parse parameter tokens
+
+    return model;
+}
+
 
 export function Parsinator() {
     console.log(LocateClasses(mahboi));
@@ -117,7 +274,7 @@ export function Parsinator() {
 // GOAL:
 
 /*
-[
+{
     "Main": {
         "attributes": [
             "hi": {
@@ -142,7 +299,8 @@ export function Parsinator() {
         ],
         "abstract": false,
         "interface": false,
-        "access": "public"
+        "access": "public",
+        "superclass": ""
     }
-]
+}
 */
