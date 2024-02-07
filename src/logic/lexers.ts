@@ -48,6 +48,11 @@ class JavaTokenizer {
     }
 
     private readIdentifier(): Token {
+        if ((this.code[this.index - 1] == '"') || (this.code[this.index - 1] == "'")) {
+            const quote = this.code[this.index - 1];
+            const value = this.readWhile((char) => char !== quote);
+            return new Token('String', value);
+        }
         const value = this.readWhile((char) => this.isIdentifierStart(char) || this.isDigit(char));
         return new Token('IDENTIFIER', value);
     }
@@ -57,24 +62,12 @@ class JavaTokenizer {
         return new Token('NUMBER', value);
     }
 
-    private readQuote(): Token {
-        return new Token('Quotes', '"');
-    }
-
     private readString(): Token {
-        const quote = this.code[this.index];
-        this.readQuote();
-        //const openingQuote = new Token('Quote', quote);
-        this.index++; // Skip the opening quote
-        const value = this.readWhile((char) => char !== quote);
-        this.readQuote();
-        //const closingQuote = new Token('Quote', quote);
-        this.index++; // Skip the closing quote
-
-
-        return new Token('STRING', value);
+        if ((this.code[this.index] == '"') || (this.code[this.index] == "'")) {
+            const value = this.readWhile((char) => this.isQuote(char));
+            return new Token('Quotes', value);
+        }
     }
-
     private readOperator(): Token {
         const value = this.readWhile((char) => this.isOperator(char));
         return new Token('OPERATOR', value);
