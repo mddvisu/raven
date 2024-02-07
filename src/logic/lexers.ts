@@ -62,11 +62,10 @@ class JavaTokenizer {
         return new Token('NUMBER', value);
     }
 
-    private readString(): Token {
-        if ((this.code[this.index] == '"') || (this.code[this.index] == "'")) {
-            const value = this.readWhile((char) => this.isQuote(char));
-            return new Token('Quotes', value);
-        }
+    private readQuote(): Token {
+        const value = this.readWhile((char) => this.isQuote(char));
+        return new Token('Quotes', value);
+
     }
     private readOperator(): Token {
         const value = this.readWhile((char) => this.isOperator(char));
@@ -105,7 +104,7 @@ class JavaTokenizer {
         }
 
         if (this.isQuote(char)) {
-            return this.readString();
+            return this.readQuote();
         }
 
         if (this.isOperator(char)) {
