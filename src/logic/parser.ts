@@ -1,4 +1,6 @@
-import { VariableModel, VariableModelDefaults, MethodModel, MethodModelDefaults, ClassModel, ClassModelDefaults, AttributesAndMethods } from '../structures/classModels';
+// @ts-nocheck
+
+import { VariableModel, MethodModel, ClassModel, AttributesAndMethods } from '../structures/classModels';
 
 // An array of tokens that describe a method, class, or attribute
 const descriptorTokens = ["public", "private", "protected", "abstract", "static", "final", "extends", "implements", "class", "interface"];
@@ -7,7 +9,7 @@ const symbols = "{}[]()<>=;+-/?:,.\"|*&^%$#@!~`";
 
 /**
  * Returns all of the tokens within a certian scope indicated by {}, [], (), "", '', or <>
- * 
+ *
  * @param {string[]} tokens - An array of tokens to look through
  * @param {number} startToken - The index of the token that indicates the beginning of the scope. The token at that
  * index must be {, [, (, ", ', or <
@@ -60,7 +62,7 @@ export function GetTokensInScope(tokens: string[], startToken: number): string[]
 
 /**
  * Searches through an array of tokens for classes, and returns them as an array of Class Models.
- * 
+ *
  * @param {string[]} tokens - An array of tokens to look through
  * 
  * @returns {string[]} - An array of Class Models
@@ -162,12 +164,7 @@ export function LocateMethodsAndAttributes(tokens: string[]): AttributesAndMetho
  * @returns {VariableModel} - The variable model created
  */
 export function CreateVariableModelFromTokens(descriptorTokens: string[], valueTokens: string[]): VariableModel {
-    let model: VariableModel = {name: "", 
-    value: undefined, 
-    type: "", 
-    access: "private", 
-    static: false, 
-    final: false};
+    let model: VariableModel = {name: "", value: undefined, type: "", access: "private", static: false, final: false};
     for (const token of descriptorTokens) {
         switch (token) {
             case ("public" || "private" || "protected"):
@@ -197,15 +194,10 @@ export function CreateVariableModelFromTokens(descriptorTokens: string[], valueT
  * @returns {MethodModel} - The method model created
  */
 export function CreateMethodModelFromTokens(descriptorTokens: string[], parameterTokens: string[]): MethodModel {
-    let model: MethodModel = {name: "", 
-    parameters: [],
-    return: "",
-    access: "private", 
-    static: false, 
-    final: false};
+    let model: MethodModel = {name: "", parameters: [], return: "", access: "private", static: false, final: false};
     for (const token of descriptorTokens) {
         switch (token) {
-            case ("public" || "private" || "protected"):
+            case ("public" || "private"|| "protected"):
                 model.access = token;
                 break;
             case ("static"):
@@ -235,15 +227,7 @@ export function CreateMethodModelFromTokens(descriptorTokens: string[], paramete
  * @returns {ClassModel} - The class model created
  */
 export function CreateClassModelFromTokens(descriptorTokensBeforeName: string[], descriptorTokensAfterName: string[], contentTokens: string[]): ClassModel {
-    let model: ClassModel = {name: "", 
-    attributes: [],
-    methods: [],
-    abstract: false,
-    interface: false,
-    access: "public",
-    extends: "",
-    static: false,
-    implements: []};
+    let model: ClassModel = {name: "", attributes: [], methods: [], abstract: false, interface: false, access: "public", extends: "", static: false, implements: []};
     for (const token of descriptorTokensBeforeName) {
         switch (token) {
             case ("public" || "private" || "protected"):

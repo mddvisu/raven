@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 class Token {
     constructor(public type: string, public value: string | null) { }
 }

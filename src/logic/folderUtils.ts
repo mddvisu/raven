@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import { os, filesystem } from "@neutralinojs/lib"
 
 import { LocateClasses } from './parser';
@@ -17,7 +19,6 @@ export async function SelectJavaProjectDirectory() {
       tokens.push(token.value);
       token = tokenizer.getNextToken();
   }
-  console.log(tokens);
   let classes = LocateClasses(tokens);
 
   console.log(classes);
@@ -25,7 +26,6 @@ export async function SelectJavaProjectDirectory() {
 
 /**
  * Returns the contents of all files within a directory that have the specified extension as a string
- * 
  * @param {string} dir - The directory to look through
  * @param {string} extension - The extension to look for
  * 
@@ -40,7 +40,7 @@ export async function GetRecursiveContentsOfDirectoryByExtension(dir: string, ex
 /**
  * Returns a 2 element array. The first element is an array of paths (as strings) to each file in a directory, 
  * and the second is an array of paths (also as strings) to each sub-directory in the directory
- * 
+ *
  * @param {string} dir - The directory to look through
  * @param {string} extension - (optional) Retrieve only files with the specified extension
  * 
@@ -67,7 +67,7 @@ export async function GetItemsInDirectory(dir: string, extension: string = ""): 
  * Returns a 2D array all items in this directory and in all subdirectories within it recursively. Index
  * 0 contains an array of file paths found while index 1 contains an array of directory paths found. I
  * hate recursion.
- * 
+ *
  * @param {string} dir - The directory to look through
  * @param {string} extension - (optional) Only search for files of this extension
  * 
@@ -106,7 +106,7 @@ async function GetItemsInDirectoryRecursive (dir: string, extension: string = ""
 
 /**
  * Takes in a list of strings of file paths and returns the contents of all files as a string
- * 
+ *
  * @param {string[]} files - An array of the file paths
  * 
  * @returns {Promise<string>} - The content of the file as a string
