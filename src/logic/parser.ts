@@ -1,9 +1,9 @@
 import { VariableModel, VariableModelDefaults, MethodModel, MethodModelDefaults, ClassModel, ClassModelDefaults, AttributesAndMethods } from '../structures/classModels';
 
-var mahboi = ["public", "class", "Main", "{", "public", "static", "int", "hi", "=", "24", ";", "public", "static", "void", "main", "(", "String", "[", "]", "args", ")", "{", "System", ".", "out", ".", "println", "(", '"', "mahboi, this peace is what all true warriors strive for!", '"', ")", ";", "}", "}"];
-
 // An array of tokens that describe a method, class, or attribute
 const descriptorTokens = ["public", "private", "protected", "abstract", "static", "final", "extends", "implements", "class", "interface"];
+
+const symbols = "{}[]()<>=;+-/?:,.\"|*&^%$#@!~`";
 
 /**
  * Returns all of the tokens within a certian scope indicated by {}, [], (), "", '', or <>
@@ -90,8 +90,8 @@ export function LocateClasses(tokens: string[]): ClassModel[] {
                 index ++;
             }
             let tokensInClass = GetTokensInScope(tokens, index);
+            
             index += tokensInClass.length + 2;
-
             classes.push(CreateClassModelFromTokens(descriptorsBeforeName, descriptorsAfterName, tokensInClass));
         } else {
             index ++;
@@ -122,10 +122,10 @@ export function LocateMethodsAndAttributes(tokens: string[]): AttributesAndMetho
             descriptors.push(tokens[index]);
             index ++;
         }
-        descriptors.push(tokens[index]);
-        index ++;
-        descriptors.push(tokens[index]);
-        index ++;
+        while (!symbols.includes(tokens[index])) {
+            descriptors.push(tokens[index]);
+            index ++;
+        }
         if (tokens[index] === "=") {
             index ++;
             parameters = [];
@@ -162,7 +162,12 @@ export function LocateMethodsAndAttributes(tokens: string[]): AttributesAndMetho
  * @returns {VariableModel} - The variable model created
  */
 export function CreateVariableModelFromTokens(descriptorTokens: string[], valueTokens: string[]): VariableModel {
-    let model: VariableModel = VariableModelDefaults;
+    let model: VariableModel = {name: "", 
+    value: undefined, 
+    type: "", 
+    access: "private", 
+    static: false, 
+    final: false};
     for (const token of descriptorTokens) {
         switch (token) {
             case ("public" || "private" || "protected"):
@@ -192,7 +197,12 @@ export function CreateVariableModelFromTokens(descriptorTokens: string[], valueT
  * @returns {MethodModel} - The method model created
  */
 export function CreateMethodModelFromTokens(descriptorTokens: string[], parameterTokens: string[]): MethodModel {
-    let model: MethodModel = MethodModelDefaults;
+    let model: MethodModel = {name: "", 
+    parameters: [],
+    return: "",
+    access: "private", 
+    static: false, 
+    final: false};
     for (const token of descriptorTokens) {
         switch (token) {
             case ("public" || "private" || "protected"):
@@ -207,7 +217,9 @@ export function CreateMethodModelFromTokens(descriptorTokens: string[], paramete
         }
     }
     // TODO: Figure out if this breaks in any scenario
-    model.return = descriptorTokens[descriptorTokens.length - 2];
+    if (!descriptorTokens.includes(descriptorTokens[descriptorTokens.length - 2])) {
+        model.return = descriptorTokens[descriptorTokens.length - 2];
+    }
     model.name = descriptorTokens[descriptorTokens.length - 1];
     // TODO: Parse parameter tokens
     return model;
@@ -223,7 +235,15 @@ export function CreateMethodModelFromTokens(descriptorTokens: string[], paramete
  * @returns {ClassModel} - The class model created
  */
 export function CreateClassModelFromTokens(descriptorTokensBeforeName: string[], descriptorTokensAfterName: string[], contentTokens: string[]): ClassModel {
-    let model: ClassModel = ClassModelDefaults;
+    let model: ClassModel = {name: "", 
+    attributes: [],
+    methods: [],
+    abstract: false,
+    interface: false,
+    access: "public",
+    extends: "",
+    static: false,
+    implements: []};
     for (const token of descriptorTokensBeforeName) {
         switch (token) {
             case ("public" || "private" || "protected"):
@@ -242,6 +262,7 @@ export function CreateClassModelFromTokens(descriptorTokensBeforeName: string[],
     }
     // TODO: Figure out if this breaks in any scenario
     model.name = descriptorTokensBeforeName[descriptorTokensBeforeName.length - 1];
+
     let index = 0;
     while (index < descriptorTokensAfterName.length) {
         let token = descriptorTokensAfterName[index];
@@ -264,8 +285,4 @@ export function CreateClassModelFromTokens(descriptorTokensBeforeName: string[],
     model.attributes = attributesAndMethods.attributes;
     model.methods = attributesAndMethods.methods;
     return model;
-}
-
-export function Parsinator() {
-    console.log(LocateClasses(mahboi));
 }

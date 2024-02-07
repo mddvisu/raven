@@ -2,7 +2,7 @@ class Token {
     constructor(public type: string, public value: string | null) { }
 }
 
-class JavaTokenizer {
+export class JavaTokenizer {
     private code: string;
     private index: number = 0;
 
@@ -129,7 +129,7 @@ class JavaTokenizer {
 }
 
 //------ Test example java code
-
+/*
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
@@ -144,4 +144,4 @@ let token = tokenizer.getNextToken();
 while (token !== null) {
     console.log(token.value);
     token = tokenizer.getNextToken();
-}
+}*/

@@ -1,13 +1,26 @@
 import { os, filesystem } from "@neutralinojs/lib"
 
+import { LocateClasses } from './parser';
+import { JavaTokenizer } from './lexers';
+
 /**
  * Opens dialog for the user to select a directory for a java project, and then reads in the contents 
  * of each java file within
  */
 export async function SelectJavaProjectDirectory() {
   let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
-  let subdirectories = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
-  console.log(subdirectories);
+  let code = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
+  const tokenizer = new JavaTokenizer(code);
+  let tokens: string[] = [];
+  let token = tokenizer.getNextToken();
+  while (token !== null) {
+      tokens.push(token.value);
+      token = tokenizer.getNextToken();
+  }
+  console.log(tokens);
+  let classes = LocateClasses(tokens);
+
+  console.log(classes);
 }
 
 /**
@@ -101,7 +114,6 @@ async function GetItemsInDirectoryRecursive (dir: string, extension: string = ""
 export async function ReadFilesToString(files: string[]): Promise<string> {
   let fileStr: string = "";
   for (const file of files) {
-    console.log("READING: " + file)
     fileStr += await filesystem.readFile(file, {pos:0, size: 100000}) + "\n";
   }
   return fileStr;
