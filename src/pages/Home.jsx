@@ -1,24 +1,11 @@
-import  { useState } from 'react';
-//import SwipeableViews from 'react-swipeable-views';
-//import { useTheme } from '@mui/material/styles';
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
-//import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
+//import  { useState } from 'react';
 import {SelectFolderPath} from "../logic/folderUtils";
 import RavenLogo from "../assets/raven-logo.png"
+import {Layout} from '../components'
+
 
 const Home = () => {
-  //const theme = useTheme();
-  const [value, setValue] = useState(0);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  // const handleChangeIndex = (index) => {
-  //   setValue(index);
-  // };
 
   return (
     <div className="text-white mt-4 text-center">
@@ -33,46 +20,8 @@ const Home = () => {
         </div>
         <div className="w-6/8 bg-[#1b1b24] flex p-2 m-2 rounded-3xl border w-[680px] h-[580px]">
           <div className=''>
-            <Box className="rounded-2xl ml-1 bg-[#2f315f] "sx={{ maxWidth: { xs: 320, sm: 650 }}}>
-                <Tabs
-                  value={value}
-                  onChange={handleChange}
-                  variant="scrollable"
-                  scrollButtons="auto"
-                  aria-label="scrollable auto tabs example"
-                  sx={{ '& .MuiSvgIcon-root': { color: 'white' } }} // Change icon color to black
-                >
-                  <Tab label="Item One" />
-                  <Tab label="Item Two" />
-                  <Tab label="Item Three" />
-                  <Tab label="Item Four" />
-                  <Tab label="Item Five" />
-                  <Tab label="Item Six" />
-                  <Tab label="Item Seven" />
-                </Tabs>
-              </Box>
+            <Layout/>
           </div>
-          {/* <SwipeableViews
-            axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
-            index={value}
-            onChangeIndex={handleChangeIndex}
-          >
-            <div>
-              <Typography component="div" role="tabpanel" hidden={value !== 0}>
-                Content for Item One
-              </Typography>
-            </div>
-            <div>
-              <Typography component="div" role="tabpanel" hidden={value !== 1}>
-                Content for Item Two
-              </Typography>
-            </div>
-            <div>
-              <Typography component="div" role="tabpanel" hidden={value !== 2}>
-                Content for Item Three
-              </Typography>
-            </div>
-          </SwipeableViews> */}
         </div>
       </div>
     </div>
