@@ -15,6 +15,7 @@ root.render(
   </React.StrictMode>
 );
 
+window.move(0,0)
 init();
 events.on("windowClose", () => {
   app.killProcess();

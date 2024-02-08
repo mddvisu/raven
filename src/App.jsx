@@ -13,23 +13,10 @@
 
 // export default App;
 
-import { useEffect } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Welcome, Home } from '../src/pages';
-const Neutralino = require(Neutralino);
 
-const App = () => {
-  useEffect(() => {
-    // Initialize Neutralino with the desired window position
-    Neutralino.init({
-      window: {
-        setPosition: {
-          x: (window.screen.width - window.innerWidth) / 2,
-          y: (window.screen.height - window.innerHeight) / 2
-        }
-      }
-    });
-  }, []); // Run only once when the component mounts
+const App = () => {// Run only once when the component mounts
 
   return (
     <div className="flex justify-center items-center p-8 h-screen bg-transparent w-full">
