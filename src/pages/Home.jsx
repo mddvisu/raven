@@ -1,8 +1,8 @@
 //import  { useState } from 'react';
 import {SelectJavaProjectDirectory} from "../logic/folderUtils";
 import RavenLogo from "../assets/raven-logo.png"
-import {Layout} from '../components'
-
+//import {Layout} from '../components'
+import {CloseableTab} from '../components';
 
 const Home = () => {
 
@@ -18,9 +18,9 @@ const Home = () => {
           </header>
           </div>
         </div>
-        <div className="w-6/8 bg-[#1b1b24] flex p-2 m-2 rounded-3xl border w-[680px] h-[580px]">
+        <div className="w-6/8 bg-[#1b1b24] flex p-2 m-2 rounded-3xl border w-[680px] h-[580px] text-white">
           <div className=''>
-            <Layout/>
+            <CloseableTab/>
           </div>
         </div>
       </div>

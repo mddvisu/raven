@@ -1,8 +1,8 @@
 import Layout from './Layout';
-import ClosableTab from './CloseableTab';
+import CloseableTab from './CloseableTab';
 
 export{
     Layout,
-    ClosableTab,
+    CloseableTab,
     
 }
