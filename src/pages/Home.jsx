@@ -11,7 +11,6 @@ const Home = () => {
   async function RetrieveClassModel () {
     let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory()
     setData(stuff);
-    console.log(stuff);
   }
 
   return (

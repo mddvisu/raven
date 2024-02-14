@@ -2,7 +2,7 @@ class Token {
     constructor(public type: string, public value: string | null) { }
 }
 
-class JavaTokenizer {
+export class JavaTokenizer {
     private code: string;
     private index: number = 0;
 
