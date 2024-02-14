@@ -11,7 +11,7 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
 } from 'reactflow';
- 
+import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
  
 const initialNodes = [
@@ -20,7 +20,11 @@ const initialNodes = [
 ];
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
-const ClosableTab = () => {
+const nodeTypes = {
+    classNode: ClassNode,
+};
+
+const ClosableTab = ({classData}) => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -30,6 +34,7 @@ const ClosableTab = () => {
         [setEdges],
     );
 
+    //const [classData, setClassData] = useState();
 
     const [selectedTab, setSelectedTab] = useState('1');
     const [tabs, setTabs] = useState([]);
@@ -42,6 +47,15 @@ const ClosableTab = () => {
             setSelectedTab('1');
         }
     }, [openTabsCount]);
+
+    useEffect(() => {
+        setNodes((nds) =>
+        classData.map((cl) => {
+                let node = { id: cl.name, type: 'classNode', position: { x: 0, y: 0 }, data: { label: cl.name } }
+                return node;
+            })
+        );
+    }, [classData, setNodes]);
 
     const handleChange = (event, newValue) => {
         setSelectedTab(newValue);
