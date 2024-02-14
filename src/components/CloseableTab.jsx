@@ -13,6 +13,7 @@ import ReactFlow, {
 } from 'reactflow';
 import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
+import './ClassNode.css';
  
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -48,17 +49,39 @@ const ClosableTab = ({classData}) => {
         }
     }, [openTabsCount]);
 
+    const handleChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
+
     useEffect(() => {
+        const onClick = (event) => {
+            createClassTab(event.target.value);
+            console.log(event.target);
+        }
         setNodes((nds) =>
-        classData.map((cl) => {
-                let node = { id: cl.name, type: 'classNode', position: { x: 0, y: 0 }, data: { label: cl.name } }
+        classData.map((cl, i) => {
+                let node = { id: cl.name, type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl } }
                 return node;
             })
         );
     }, [classData, setNodes]);
 
-    const handleChange = (event, newValue) => {
-        setSelectedTab(newValue);
+    const createClassTab = (data) => {
+        console.log(openTabsCount);
+        const newTab = {
+            value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
+            label: `${data}`
+        };
+        setTabs([...tabs, newTab]);
+        setPanels([
+            ...panels,
+            {
+                value: `${openTabsCount + 1}`,
+                child: () => <div style={{ height: '300px', width: '300px', backgroundColor: 'blue' }} />
+            }
+        ]);
+        setOpenTabsCount(openTabsCount + 1); // Increment count
+        setSelectedTab(`${openTabsCount + 1}`); // Select the newly created tab
     };
 
     const createBlueBox = () => {
@@ -131,11 +154,24 @@ const ClosableTab = ({classData}) => {
                             onEdgesChange={onEdgesChange}
                             onConnect={onConnect}
                             proOptions={{ hideAttribution: true }}
+                            nodeTypes={nodeTypes}
                         >
                             <Controls />
                             <Background variant="dots" gap={12} size={1} />
                         </ReactFlow>
                     </div>
+                    <Grid container spacing={2}>
+                        <Grid item xs={12} md={18}>
+                            <Button onClick={createRedBox} variant="contained" color="primary">
+                                Create Red Box
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} md={18}>
+                            <Button onClick={createBlueBox} variant="contained" color="secondary">
+                                Create Blue Box
+                            </Button>
+                        </Grid>
+                    </Grid>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
