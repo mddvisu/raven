@@ -15,11 +15,8 @@ import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
 import './ClassNode.css';
  
-const initialNodes = [
-  { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
-  { id: '2', position: { x: 0, y: 100 }, data: { label: '2' } },
-];
-const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
+const initialNodes = [];
+const initialEdges = [];
 
 const nodeTypes = {
     classNode: ClassNode,
@@ -53,36 +50,60 @@ const ClosableTab = ({classData}) => {
         setSelectedTab(newValue);
     };
 
-    useEffect(() => {
-        const onClick = (event) => {
-            createClassTab(event.target.value);
-            console.log(event.target);
-        }
-        setNodes((nds) =>
-        classData.map((cl, i) => {
-                let node = { id: cl.name, type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl } }
-                return node;
-            })
-        );
-    }, [classData, setNodes]);
-
-    const createClassTab = (data) => {
-        console.log(openTabsCount);
+    const createClassTab = (data = undefined) => {
         const newTab = {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
-            label: `${data}`
+            label: `${data.name}`
         };
         setTabs([...tabs, newTab]);
         setPanels([
             ...panels,
             {
                 value: `${openTabsCount + 1}`,
-                child: () => <div style={{ height: '300px', width: '300px', backgroundColor: 'blue' }} />
+                child: () => 
+                <div style={{textAlign: "left"}}>
+                    <h1>{data.name}</h1>
+                    <h2>Access: {data.access}</h2>
+                    <h2>Extends: {data.extends}</h2>
+                    <h2>Static: {data.static.toString()}</h2>
+                    <h2>Abstract: {data.abstract.toString()}</h2>
+                    <h2>Interface: {data.interface.toString()}</h2>
+                    <h2>Attributes: </h2>
+                    <div style={{fontSize: "75%"}} >
+                        {data.attributes.map((attribute) => (
+                            <h3>
+                                - {attribute.name}
+                            </h3>
+                        ))}
+                    </div>
+                    <h2>Methods: </h2>
+                    <div style={{fontSize: "75%"}} >
+                        {data.methods.map((method) => (
+                            <h3>
+                                - {method.name}
+                            </h3>
+                        ))}
+                    </div>
+                </div>
             }
         ]);
         setOpenTabsCount(openTabsCount + 1); // Increment count
         setSelectedTab(`${openTabsCount + 1}`); // Select the newly created tab
     };
+
+    useEffect(() => {
+        const onClick = (event) => {
+            let classIndex = Number(event.target.value);
+            let classObject = classData[classIndex];
+            createClassTab(classObject);
+        }
+        setNodes((nds) =>
+        classData.map((cl, i) => {
+                let node = { id: cl.name, type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl, classIndex: i } }
+                return node;
+            })
+        );
+    }, [classData, setNodes, createClassTab]);
 
     const createBlueBox = () => {
         const newTab = {
@@ -160,18 +181,6 @@ const ClosableTab = ({classData}) => {
                             <Background variant="dots" gap={12} size={1} />
                         </ReactFlow>
                     </div>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createRedBox} variant="contained" color="primary">
-                                Create Red Box
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createBlueBox} variant="contained" color="secondary">
-                                Create Blue Box
-                            </Button>
-                        </Grid>
-                    </Grid>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
@@ -184,18 +193,3 @@ const ClosableTab = ({classData}) => {
 };
 
 export default ClosableTab;
-
-/*
-<Grid container spacing={2}>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createRedBox} variant="contained" color="primary">
-                                Create Red Box
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createBlueBox} variant="contained" color="secondary">
-                                Create Blue Box
-                            </Button>
-                        </Grid>
-                    </Grid>
-*/

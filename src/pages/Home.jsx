@@ -6,7 +6,7 @@ import {CloseableTab} from '../components';
 
 const Home = () => {
 
-  const [data, setData] = useState([{name: "", attributes: [], methods: [], abstract: false, interface: false, access: "public", extends: "", static: false, implements: []}]);
+  const [data, setData] = useState([]);
 
   async function RetrieveClassModel () {
     let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory()
