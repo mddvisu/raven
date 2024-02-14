@@ -2,8 +2,17 @@ import { useState, useEffect } from "react";
 import { Tab, Grid, Button } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
-import React from 'react';
-import ReactFlow, {Background} from 'reactflow';
+import React, { useCallback } from 'react';
+import ReactFlow, {
+  MiniMap,
+  Controls,
+  Background,
+  useNodesState,
+  useEdgesState,
+  addEdge,
+} from 'reactflow';
+ 
+import 'reactflow/dist/style.css';
  
 const initialNodes = [
   { id: '1', position: { x: 0, y: 0 }, data: { label: '1' } },
@@ -12,6 +21,16 @@ const initialNodes = [
 const initialEdges = [{ id: 'e1-2', source: '1', target: '2' }];
 
 const ClosableTab = () => {
+
+    const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+    const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+    
+    const onConnect = useCallback(
+        (params) => setEdges((eds) => addEdge(params, eds)),
+        [setEdges],
+    );
+
+
     const [selectedTab, setSelectedTab] = useState('1');
     const [tabs, setTabs] = useState([]);
     const [panels, setPanels] = useState([]);
@@ -89,19 +108,20 @@ const ClosableTab = () => {
                             key={tab.value} label={tab.label} value={tab.value} />
                     ))}
                 </TabList>
-                <TabPanel value="1" sx={{ height: '400px', overflowY: 'auto' }}>
-                    <Grid container spacing={2}>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createRedBox} variant="contained" color="primary">
-                                Create Red Box
-                            </Button>
-                        </Grid>
-                        <Grid item xs={12} md={18}>
-                            <Button onClick={createBlueBox} variant="contained" color="secondary">
-                                Create Blue Box
-                            </Button>
-                        </Grid>
-                    </Grid>
+                <TabPanel value="1" >
+                    <div style={{ width: "610px", height: "440px" }}>
+                        <ReactFlow
+                            nodes={nodes}
+                            edges={edges}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                            onConnect={onConnect}
+                            proOptions={{ hideAttribution: true }}
+                        >
+                            <Controls />
+                            <Background variant="dots" gap={12} size={1} />
+                        </ReactFlow>
+                    </div>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
@@ -114,3 +134,18 @@ const ClosableTab = () => {
 };
 
 export default ClosableTab;
+
+/*
+<Grid container spacing={2}>
+                        <Grid item xs={12} md={18}>
+                            <Button onClick={createRedBox} variant="contained" color="primary">
+                                Create Red Box
+                            </Button>
+                        </Grid>
+                        <Grid item xs={12} md={18}>
+                            <Button onClick={createBlueBox} variant="contained" color="secondary">
+                                Create Blue Box
+                            </Button>
+                        </Grid>
+                    </Grid>
+*/
