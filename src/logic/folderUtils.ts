@@ -9,7 +9,7 @@ import { JavaTokenizer } from './lexers';
  * Opens dialog for the user to select a directory for a java project, and then reads in the contents 
  * of each java file within
  */
-export async function SelectJavaProjectDirectory() {
+export async function RetrieveJavaClassModelBySelectingProjectDirectory(): ClassModel[] {
   let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
   let code = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
   const tokenizer = new JavaTokenizer(code);
@@ -21,7 +21,7 @@ export async function SelectJavaProjectDirectory() {
   }
   let classes = LocateClasses(tokens);
 
-  console.log(classes);
+  return classes;
 }
 
 /**
