@@ -61,7 +61,7 @@ const ClosableTab = ({classData}) => {
             {
                 value: `${openTabsCount + 1}`,
                 child: () => 
-                <div className="w-[500px]">
+                <div className="w-[500px] bg-gray-400">
                     <div style={{textAlign: "left"}}>
                         <h1>{data.name}</h1>
                         <h2>Access: {data.access}</h2>
@@ -70,13 +70,13 @@ const ClosableTab = ({classData}) => {
                         <h2>Abstract: {data.abstract.toString()}</h2>
                         <h2>Interface: {data.interface.toString()}</h2>
                         <h2>Attributes: </h2>
-                        <div style={{fontSize: "75%"}} >
+                        <div style={{fontSize: "75%"}} className="w-full" >
                             <div className="w-[1/2]">
                                 {data.attributes.slice(0, Math.ceil(data.attributes.length / 2)).map((attribute, index) => (
                                     <h3 key={index}>- {attribute.name}</h3>
                                 ))}
                             </div>
-                            <div className="w-[1/2]">
+                            <div className="w-[2/2]">
                                 {data.attributes.slice(Math.ceil(data.attributes.length / 2)).map((attribute, index) => (
                                     <h3 key={index}>- {attribute.name}</h3>))}
                             </div>
@@ -166,7 +166,7 @@ const ClosableTab = ({classData}) => {
     return (
         <div className="">
             <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-full h-[65px] mb-4">
+                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-[660px] h-[65px] mb-4">
                     <Tab label="Main Tab" value="1" className=" pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
 
                     {tabs.map((tab) => (
@@ -179,7 +179,8 @@ const ClosableTab = ({classData}) => {
                     ))}
                 </TabList>
                 <TabPanel value="1" >
-                    <div style={{ width: "610px", height: "440px", background: 'red' }}>
+                    {/* <div style={{ width: "610px", height: "440px", background: 'black' }}> */}
+                    <div className="w-[610px] h-[440px] bg-gray-800 text-white rounded-2xl">
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
@@ -190,7 +191,7 @@ const ClosableTab = ({classData}) => {
                             nodeTypes={nodeTypes}
                         >
                             <Controls />
-                            <Background variant="dots" gap={12} size={1} />
+                            {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
                 </TabPanel>

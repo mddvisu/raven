@@ -3,8 +3,8 @@ import { Handle, Position } from 'reactflow';
 
 const ClassNode = memo(({ data, isConnectable }) => (
   <>
-    <div className="class-node border border-black-500 p-5 rounded bg-black text-white">
-      <button value={data.classIndex} className="button border border-gray-300 p-5 mb-5 rounded bg-red-900 text-gray-800 font-bold w-full" 
+    <div className="class-node border border-black-500 p-5 rounded bg-gray-800 text-white">
+      <button value={data.classIndex} className="button border border-gray-300 p-5 mb-5 rounded bg-yellow-500 text-white font-bold w-full" 
         onClick={data.onClick}>{data.classData.name}
       </button>
       <div className="block bg-black-700 text-xs" style={{ textAlign: "left" }}>
