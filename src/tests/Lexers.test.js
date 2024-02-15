@@ -21,7 +21,6 @@ describe('JavaTokenizer', () => {
             token = tokenizer.getNextToken();
         }
 
-
         expect(tokens).toEqual([
             { type: 'IDENTIFIER', value: 'public' },
             { type: 'IDENTIFIER', value: 'class' },
