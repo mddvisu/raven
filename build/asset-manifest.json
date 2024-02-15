@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/static/css/main.d66c8d90.css",
+    "main.js": "/static/js/main.beaa7748.js",
+    "static/media/raven-logo.png": "/static/media/raven-logo.d0ec48e62454a0e95d86.png",
+    "index.html": "/index.html",
+    "main.d66c8d90.css.map": "/static/css/main.d66c8d90.css.map",
+    "main.beaa7748.js.map": "/static/js/main.beaa7748.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.d66c8d90.css",
+    "static/js/main.beaa7748.js"
+  ]
+}

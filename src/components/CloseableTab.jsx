@@ -47,7 +47,7 @@ const ClosableTab = () => {
             ...panels,
             {
                 value: `${openTabsCount + 1}`,
-                child: () => <div style={{ height: '200px', width: '200px', backgroundColor: 'red' }} />
+                child: () => <div style={{ height: '400px', width: '400px', backgroundColor: 'red' }} />
             }
         ]);
         setOpenTabsCount(openTabsCount + 1); // Increment count
@@ -63,24 +63,33 @@ const ClosableTab = () => {
 
         setOpenTabsCount(openTabsCount - 1); // Decrement count
 
-        setSelectedTab('1');
+        setSelectedTab(`1`);
     }
 
     return (
         <div className="">
-            <TabContext value={selectedTab}>
-                <TabList onChange={handleChange} aria-label="lab API tabs example" className=" flex rounded-lg bg-gray-800 color-white w-full h-[65px] mb-4">
-                    <Tab label="Main Tab" value="1" className=" pt-4 bg-black text-white rounded-l-lg mx-1" style={{ width: `150px`, height: '72px', color: 'white'}} />
-
-                    {tabs.map((tab) => (
+            <TabContext value={selectedTab} className= "bg-gray-400"  >
+                <div className=" bg-gray-800 rounded-2xl w-[660px]">
+                    <TabList onChange={handleChange} aria-label=" lab API tabs example" className="flex rounded-lg w-full h-[65px] mb-4 ">
                         <Tab
-                            icon={<CloseIcon onClick={() => handleClose(tab.value)} />}
-                            iconPosition="end"
-                            className="bg-white hover:bg-gray-900 mb-4"
-                            style={{ color: 'white' }}
-                            key={tab.value} label={tab.label} value={tab.value} />
-                    ))}
-                </TabList>
+                            label="Main Tab"
+                            value="1"
+                            className={` hover:bg-gray-900 pt-4 text-white rounded-full hover:rounded-2xl ${selectedTab === "1" ? 'bg-gray-900' : 'bg-gray-800'}`}
+                            style={{ width: `150px`, height: '72px', color: 'white', margin: '2px'}}
+                        />
+
+                        {tabs.map((tab) => (
+                            <Tab
+                                icon={<CloseIcon className="ml-2 hover:bg-red-800 rounded-full"onClick={() => handleClose(tab.value)} />}
+                                iconPosition="end"
+                                className={`hover:rounded-2xl hover:bg-gray-900 mb-4 rounded-2xl ${selectedTab === tab.value ? 'bg-gray-900' : 'bg-gray-700'}`}
+                                style={{ color: 'white' }}
+                                key={tab.value} label={tab.label} value={tab.value}
+                            />
+                        ))}
+            </TabList>
+
+                </div>
                 <TabPanel value="1" sx={{ height: '200px', overflowY: 'auto' }}>
                     <Grid container spacing={2}>
                         <Grid item xs={12} md={18}>
