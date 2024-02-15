@@ -61,28 +61,40 @@ const ClosableTab = ({classData}) => {
             {
                 value: `${openTabsCount + 1}`,
                 child: () => 
-                <div style={{textAlign: "left"}}>
-                    <h1>{data.name}</h1>
-                    <h2>Access: {data.access}</h2>
-                    <h2>Extends: {data.extends}</h2>
-                    <h2>Static: {data.static.toString()}</h2>
-                    <h2>Abstract: {data.abstract.toString()}</h2>
-                    <h2>Interface: {data.interface.toString()}</h2>
-                    <h2>Attributes: </h2>
-                    <div style={{fontSize: "75%"}} >
-                        {data.attributes.map((attribute) => (
-                            <h3>
-                                - {attribute.name}
-                            </h3>
-                        ))}
-                    </div>
-                    <h2>Methods: </h2>
-                    <div style={{fontSize: "75%"}} >
-                        {data.methods.map((method) => (
-                            <h3>
-                                - {method.name}
-                            </h3>
-                        ))}
+                <div className="w-[500px]">
+                    <div style={{textAlign: "left"}}>
+                        <h1>{data.name}</h1>
+                        <h2>Access: {data.access}</h2>
+                        <h2>Extends: {data.extends}</h2>
+                        <h2>Static: {data.static.toString()}</h2>
+                        <h2>Abstract: {data.abstract.toString()}</h2>
+                        <h2>Interface: {data.interface.toString()}</h2>
+                        <h2>Attributes: </h2>
+                        <div style={{fontSize: "75%"}} >
+                            <div className="w-[1/2]">
+                                {data.attributes.slice(0, Math.ceil(data.attributes.length / 2)).map((attribute, index) => (
+                                    <h3 key={index}>- {attribute.name}</h3>
+                                ))}
+                            </div>
+                            <div className="w-[1/2]">
+                                {data.attributes.slice(Math.ceil(data.attributes.length / 2)).map((attribute, index) => (
+                                    <h3 key={index}>- {attribute.name}</h3>))}
+                            </div>
+
+                            {/* {data.attributes.map((attribute) => (
+                                <h3>
+                                    - {attribute.name}
+                                </h3>
+                            ))} */}
+                        </div>
+                        <h2>Methods: </h2>
+                        <div style={{fontSize: "55%"}} >
+                            {data.methods.map((method) => (
+                                <h3>
+                                    - {method.name}
+                                </h3>
+                            ))}
+                        </div>
                     </div>
                 </div>
             }
@@ -167,7 +179,7 @@ const ClosableTab = ({classData}) => {
                     ))}
                 </TabList>
                 <TabPanel value="1" >
-                    <div style={{ width: "610px", height: "440px" }}>
+                    <div style={{ width: "610px", height: "440px", background: 'red' }}>
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
