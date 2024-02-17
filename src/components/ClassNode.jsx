@@ -4,6 +4,13 @@ import { Handle, Position } from 'reactflow';
 export default memo(({ data, isConnectable }) => {
   return (
     <>
+      <Handle
+        type="target"
+        position={Position.Top}
+        style={{ background: '#555' }}
+        onConnect={(params) => console.log('handle onConnect', params)}
+        isConnectable={isConnectable}
+      />
       <div className="class-node">
         <button value={data.classIndex} className="button" onClick={ data.onClick } >{data.classData.name}</button>
         <div className="class-node" style={{textAlign: "left"}}>
@@ -30,6 +37,12 @@ export default memo(({ data, isConnectable }) => {
             </div>
         </div>
       </div>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        style={{ background: '#555' }}
+        isConnectable={isConnectable}
+      />
     </>
   );
 });

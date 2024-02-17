@@ -10,11 +10,13 @@ import ReactFlow, {
   useNodesState,
   useEdgesState,
   addEdge,
+  MarkerType
 } from 'reactflow';
 import ClassNode from "./ClassNode";
 import 'reactflow/dist/style.css';
 import './ClassNode.css';
- 
+import dagre from 'dagre';
+
 const initialNodes = [];
 const initialEdges = [];
 
@@ -22,15 +24,82 @@ const nodeTypes = {
     classNode: ClassNode,
 };
 
+
+
+const dagreGraph = new dagre.graphlib.Graph();
+dagreGraph.setDefaultEdgeLabel(() => ({}));
+
+const nodeWidth = 172;
+const nodeHeight = 500;
+
+const getLayoutedElements = (nodes, edges, direction = 'TB') => {
+    const isHorizontal = direction === 'LR';
+    dagreGraph.setGraph({ rankdir: direction });
+
+    nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
+    });
+
+    edges.forEach((edge) => {
+    dagreGraph.setEdge(edge.source, edge.target);
+    });
+
+    dagre.layout(dagreGraph);
+
+    nodes.forEach((node) => {
+    const nodeWithPosition = dagreGraph.node(node.id);
+    node.targetPosition = isHorizontal ? 'left' : 'top';
+    node.sourcePosition = isHorizontal ? 'right' : 'bottom';
+
+    // We are shifting the dagre node position (anchor=center center) to the top left
+    // so it matches the React Flow node anchor point (top left).
+    node.position = {
+        x: nodeWithPosition.x - nodeWidth / 2,
+        y: nodeWithPosition.y - nodeHeight / 2,
+    };
+
+    return node;
+    });
+
+    return { nodes, edges };
+};
+
+const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+  initialNodes,
+  initialEdges
+);
+
+
+
+
 const ClosableTab = ({classData}) => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
     
     const onConnect = useCallback(
-        (params) => setEdges((eds) => addEdge(params, eds)),
+        (params) => {
+            console.log(params);
+            setEdges((eds) => addEdge(params, eds));
+        },
         [setEdges],
     );
+
+
+    const onLayout = useCallback(
+        (direction) => {
+          const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
+            nodes,
+            edges,
+            direction
+          );
+    
+          setNodes([...layoutedNodes]);
+          setEdges([...layoutedEdges]);
+        },
+        [nodes, edges]
+      );
+
 
     //const [classData, setClassData] = useState();
 
@@ -50,7 +119,8 @@ const ClosableTab = ({classData}) => {
         setSelectedTab(newValue);
     };
 
-    const createClassTab = (data = undefined) => {
+    
+    const createClassTab = useCallback((data = undefined) => {
         const newTab = {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
             label: `${data.name}`
@@ -89,7 +159,7 @@ const ClosableTab = ({classData}) => {
         ]);
         setOpenTabsCount(openTabsCount + 1); // Increment count
         setSelectedTab(`${openTabsCount + 1}`); // Select the newly created tab
-    };
+    }, [panels, tabs]);
 
     useEffect(() => {
         const onClick = (event) => {
@@ -98,12 +168,44 @@ const ClosableTab = ({classData}) => {
             createClassTab(classObject);
         }
         setNodes((nds) =>
-        classData.map((cl, i) => {
-                let node = { id: cl.name, type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl, classIndex: i } }
+            classData.map((cl, i) => {
+                let node = { id: (i + 1).toString(), type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl, classIndex: i } }
                 return node;
             })
         );
-    }, [classData, setNodes, createClassTab]);
+        setEdges((edg) =>
+        {
+            let retval = [];
+            for (let i = 0; i < classData.length; i++) {
+                for (let j = 0; j < classData.length; j++) {
+                    if (classData[j].name === classData[i].extends) {
+                        console.log("hi");
+                        let edge = {
+                            type: 'step',
+                            source: (j + 1).toString(),
+                            target: (i + 1).toString(),
+                            id: i.toString(),
+                            animated: true,
+                            markerStart: {
+                                type: MarkerType.ArrowClosed,
+                                width: 20,
+                                height: 20,
+                                color: '#FFFFFF',
+                            },
+                                style: {
+                                strokeWidth: 2,
+                                stroke: '#FFFFFF',
+                            },
+                          };
+                        retval.push(edge);
+                    }
+                }
+            }
+            console.log(retval);
+            return retval;
+        });
+    },
+        [classData, setNodes, createClassTab]);
 
     const createBlueBox = () => {
         const newTab = {
@@ -181,6 +283,7 @@ const ClosableTab = ({classData}) => {
                             <Background variant="dots" gap={12} size={1} />
                         </ReactFlow>
                     </div>
+                    <button onClick={() => onLayout('TB')}>LAYOUT</button>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
