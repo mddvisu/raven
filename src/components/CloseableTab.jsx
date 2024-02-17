@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Tab, Grid, Button } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -74,16 +74,22 @@ const { nodes: layoutedNodes, edges: layoutedEdges } = getLayoutedElements(
 
 const ClosableTab = ({classData}) => {
 
+    const prevItemIdRef = useRef();
+    useEffect(() => {
+        prevItemIdRef.current = classData;
+    });
+    const prevItemId = prevItemIdRef.current;
+
     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-    
+    /*
     const onConnect = useCallback(
         (params) => {
             console.log(params);
             setEdges((eds) => addEdge(params, eds));
         },
         [setEdges],
-    );
+    );*/
 
 
     const onLayout = useCallback(
@@ -103,6 +109,7 @@ const ClosableTab = ({classData}) => {
 
     //const [classData, setClassData] = useState();
 
+    const [layoutStuff, setLayoutStuff] = useState(false);
     const [selectedTab, setSelectedTab] = useState('1');
     const [tabs, setTabs] = useState([]);
     const [panels, setPanels] = useState([]);
@@ -119,7 +126,11 @@ const ClosableTab = ({classData}) => {
         setSelectedTab(newValue);
     };
 
-    
+    useEffect(() => {
+        onLayout('TB');
+        setLayoutStuff(false);
+    }, [layoutStuff]);
+
     const createClassTab = useCallback((data = undefined) => {
         const newTab = {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
@@ -167,45 +178,47 @@ const ClosableTab = ({classData}) => {
             let classObject = classData[classIndex];
             createClassTab(classObject);
         }
-        setNodes((nds) =>
-            classData.map((cl, i) => {
-                let node = { id: (i + 1).toString(), type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl, classIndex: i } }
-                return node;
-            })
-        );
-        setEdges((edg) =>
-        {
-            let retval = [];
-            for (let i = 0; i < classData.length; i++) {
-                for (let j = 0; j < classData.length; j++) {
-                    if (classData[j].name === classData[i].extends) {
-                        console.log("hi");
-                        let edge = {
-                            type: 'step',
-                            source: (j + 1).toString(),
-                            target: (i + 1).toString(),
-                            id: i.toString(),
-                            animated: true,
-                            markerStart: {
-                                type: MarkerType.ArrowClosed,
-                                width: 20,
-                                height: 20,
-                                color: '#FFFFFF',
-                            },
-                                style: {
-                                strokeWidth: 2,
-                                stroke: '#FFFFFF',
-                            },
-                          };
-                        retval.push(edge);
+        if (classData !== prevItemId) {
+            setNodes((nds) =>
+                classData.map((cl, i) => {
+                    let node = { id: (i + 1).toString(), type: 'classNode', position: { x: (i * 200), y: 0 }, data: { onClick: onClick, classData: cl, classIndex: i } }
+                    return node;
+                })
+            );
+            setEdges((edg) =>
+            {
+                let retval = [];
+                for (let i = 0; i < classData.length; i++) {
+                    for (let j = 0; j < classData.length; j++) {
+                        if (classData[j].name === classData[i].extends) {
+                            console.log("hi");
+                            let edge = {
+                                type: 'step',
+                                source: (j + 1).toString(),
+                                target: (i + 1).toString(),
+                                id: i.toString(),
+                                animated: true,
+                                markerStart: {
+                                    type: MarkerType.Arrow,
+                                    width: 20,
+                                    height: 20,
+                                    color: '#FFFFFF',
+                                },
+                                    style: {
+                                    strokeWidth: 2,
+                                    stroke: '#FFFFFF',
+                                },
+                            };
+                            retval.push(edge);
+                        }
                     }
                 }
-            }
-            console.log(retval);
-            return retval;
-        });
+                setLayoutStuff(true);
+                return retval;
+            });
+        }
     },
-        [classData, setNodes, createClassTab]);
+    [classData, setNodes, createClassTab]);
 
     const createBlueBox = () => {
         const newTab = {
@@ -275,7 +288,6 @@ const ClosableTab = ({classData}) => {
                             edges={edges}
                             onNodesChange={onNodesChange}
                             onEdgesChange={onEdgesChange}
-                            onConnect={onConnect}
                             proOptions={{ hideAttribution: true }}
                             nodeTypes={nodeTypes}
                         >
@@ -283,7 +295,7 @@ const ClosableTab = ({classData}) => {
                             <Background variant="dots" gap={12} size={1} />
                         </ReactFlow>
                     </div>
-                    <button onClick={() => onLayout('TB')}>LAYOUT</button>
+                    <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
