@@ -218,7 +218,7 @@ const ClosableTab = ({classData}) => {
                             <Background variant="dots" gap={12} size={1} />
                         </ReactFlow>
                     </div>
-                    <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('LR')}>LAYOUT</button>
+                    <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
