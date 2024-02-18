@@ -205,7 +205,7 @@ const ClosableTab = ({classData}) => {
                     ))}
                 </TabList>
                 <TabPanel value="1" >
-                    <div style={{ width: "610px", height: "440px" }}>
+                    <div data-testid="react-flow-graph" style={{ width: "610px", height: "440px" }}>
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}

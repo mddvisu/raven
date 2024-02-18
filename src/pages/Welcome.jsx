@@ -11,10 +11,13 @@ const Welcome = () => {
         <p className=' text-7xl font-extrabold underline' style={{ fontFamily: 'Consolas' }}> R A V E N</p>
         <p className="mt-10">2024 UNCO Properties Raven Inc.</p>
 
-        <button className="w-[170px] mt-64 px-4 bg-black rounded-2xl  hover:border-[#646cff] border-[#2f315f] border-4 outline-none focus:outline-none" >
-          <Link className="text-2xl font-bold text-[#646cff] "style={{ fontFamily: 'Consolas' }} to="/Home">Proceed</Link>
-
-        </button>
+        
+        <Link data-testid="proceed-button" className="text-2xl font-bold text-[#646cff] "style={{ fontFamily: 'Consolas' }} to="/Home">
+          <button className="w-[170px] mt-64 px-4 bg-black rounded-2xl  hover:border-[#646cff] border-[#2f315f] border-4 outline-none focus:outline-none" >
+            Proceed
+          </button>
+        </Link>
+        
 
       </div>
       

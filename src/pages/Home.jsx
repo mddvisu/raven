@@ -20,7 +20,7 @@ const Home = () => {
           <div className='w-[300px] justify-center items-center'>
           <header className="flex flex-row mb-4">
                 <img src={RavenLogo} className='w-[50px] mr-5'/>
-                <button className='rounded-3xl' onClick={RetrieveClassModel}>Open Project Directory</button>
+                <button data-testid="open-project-button" className='rounded-3xl' onClick={RetrieveClassModel}>Open Project Directory</button>
           </header>
           </div>
         </div>
