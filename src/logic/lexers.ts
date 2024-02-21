@@ -8,6 +8,7 @@ export class JavaTokenizer {
 
     private code: string;
     private index: number = 0;
+    private lastToken: Token | null = null;
 
     constructor(code: string) {
         this.code = code;
@@ -59,9 +60,14 @@ export class JavaTokenizer {
     }
 
     private readIdentifier(): Token {
-        if ((this.code[this.index - 1] == '"') || (this.code[this.index - 1] == "'")) {
-            const quote = this.code[this.index - 1];
+        //if ((this.code[this.index - 1] == '"') || (this.code[this.index - 1] == "'")) {
+        if (this.lastToken && this.lastToken.type == "Quotes") {
+            //const quote = this.code[this.index - 1];
+            const quote = this.lastToken.value;
+
             const value = this.readWhile((char) => char !== quote);
+
+            this.lastToken = null;
             return new Token('String', value);
         }
 
@@ -77,6 +83,7 @@ export class JavaTokenizer {
 
     private readQuote(): Token {
         const value = this.readWhile((char) => this.isQuote(char));
+        this.lastToken = new Token('Quotes', value);
         return new Token('Quotes', value);
     }
 
@@ -165,13 +172,11 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-/*
+
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
-    System.out.println("Hello, 5th World!");
-    // I am a comment
-    int num = 50/2;
+    System.out.println(damageDealt + "  has been deducted from Mr. Wobbles health! " + "Health Bar: " + health);
 }
 `;
 
@@ -182,4 +187,3 @@ while (token !== null) {
     console.log(token);
     token = tokenizer.getNextToken();
 }
-*/
