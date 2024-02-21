@@ -67,17 +67,19 @@ export class JavaTokenizer {
 
             const value = this.readWhile((char) => char !== quote);
 
-            this.lastToken = null;
+            this.lastToken = new Token('String', value);
             return new Token('String', value);
         }
 
         const value = this.readWhile((char) => this.isIdentifierStart(char) || this.isDigit(char));
         const type = KEYWORDS.includes(value) ? 'KEYWORD' : 'IDENTIFIER';
+        this.lastToken = new Token(type, value);
         return new Token(type, value);
     }
 
     private readNumber(): Token {
         const value = this.readWhile((char) => this.isDigit(char));
+        this.lastToken = new Token('NUMBER', value);
         return new Token('NUMBER', value);
     }
 
@@ -89,16 +91,19 @@ export class JavaTokenizer {
 
     private readOperator(): Token {
         const value = this.readWhile((char) => this.isOperator(char));
+        this.lastToken = new Token('OPERATOR', value);
         return new Token('OPERATOR', value);
     }
 
     private readCurlyBrace(): Token {
         const value = this.readWhile((char) => this.isCurlyBrace(char));
+        this.lastToken = new Token('Curly Brace', value);
         return new Token('Curly Brace', value);
     }
 
     private readSingleLineComment(): Token {
         const value = this.readWhile((char) => char !== '\n' && char !== '\r');
+        this.lastToken = new Token('COMMENT', value);
         return new Token('COMMENT', value);
     }
 
@@ -112,12 +117,14 @@ export class JavaTokenizer {
             }
             value += char;
         }
+        this.lastToken = new Token('COMMENT', value);
         return new Token('COMMENT', value);
     }
 
     private readOther(): Token {
         const value = this.code[this.index];
         this.index++;
+        this.lastToken = new Token('OTHER', value);
         return new Token('OTHER', value);
     }
 
@@ -172,7 +179,7 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-
+/*
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
@@ -187,3 +194,4 @@ while (token !== null) {
     console.log(token);
     token = tokenizer.getNextToken();
 }
+*/
