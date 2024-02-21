@@ -50,27 +50,25 @@ export class JavaTokenizer {
         return char === '/' && this.code[this.index + 1] === '*';
     }
 
+    private isString(): boolean {
+        return this.lastToken && this.lastToken.type == "Quotes";
+    }
+
+    private readCurrent() {
+        let result = this.code[this.index];
+        this.index++;
+        return result;
+    }
+
     private readWhile(predicate: (char: string) => boolean): string {
         let result = '';
         while (this.code[this.index] !== undefined && predicate(this.code[this.index])) {
-            result += this.code[this.index];
-            this.index++;
+            result += this.readCurrent();
         }
         return result;
     }
 
     private readIdentifier(): Token {
-        //if ((this.code[this.index - 1] == '"') || (this.code[this.index - 1] == "'")) {
-        if (this.lastToken && this.lastToken.type == "Quotes") {
-            //const quote = this.code[this.index - 1];
-            const quote = this.lastToken.value;
-
-            const value = this.readWhile((char) => char !== quote);
-
-            this.lastToken = new Token('String', value);
-            return new Token('String', value);
-        }
-
         const value = this.readWhile((char) => this.isIdentifierStart(char) || this.isDigit(char));
         const type = KEYWORDS.includes(value) ? 'KEYWORD' : 'IDENTIFIER';
         this.lastToken = new Token(type, value);
@@ -84,9 +82,11 @@ export class JavaTokenizer {
     }
 
     private readQuote(): Token {
-        const value = this.readWhile((char) => this.isQuote(char));
-        this.lastToken = new Token('Quotes', value);
-        return new Token('Quotes', value);
+        // Quotes are only 1 character, so don't want to treat multiple quotes next to it as the same token
+        const value = this.readCurrent();
+        let tokenType = this.lastToken.type === "String" ? 'Endquotes' : 'Quotes';
+        this.lastToken = new Token(tokenType, value);
+        return new Token(tokenType, value);
     }
 
     private readOperator(): Token {
@@ -128,6 +128,13 @@ export class JavaTokenizer {
         return new Token('OTHER', value);
     }
 
+    private readString(): Token {
+        const quote = this.lastToken.value;
+        const value = this.readWhile((char) => char !== quote);
+        this.lastToken = new Token('String', value);
+        return new Token('String', value);
+    }
+
     private skipWhitespace(): void {
         this.readWhile((char) => this.isWhitespace(char));
     }
@@ -137,12 +144,20 @@ export class JavaTokenizer {
     }
 
     getNextToken(): Token | null {
-        this.skipWhitespace();
+
+        if (!this.isString()) {
+            this.skipWhitespace();
+        }
+
         if (this.code[this.index] === undefined) {
             return null; // End of input
         }
 
         const char = this.code[this.index];
+
+        if (this.isString()) {
+            return this.readString();
+        }
 
         if (this.isIdentifierStart(char)) {
             return this.readIdentifier();
@@ -179,11 +194,11 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-/*
+
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
-    System.out.println(damageDealt + "  has been deducted from Mr. Wobbles health! " + "Health Bar: " + health);
+    System.out.println(damageDealt + "'  has been deducted from Mr. Wobble's health! " + "Health Bar: " + health);
 }
 `;
 
@@ -194,4 +209,3 @@ while (token !== null) {
     console.log(token);
     token = tokenizer.getNextToken();
 }
-*/
