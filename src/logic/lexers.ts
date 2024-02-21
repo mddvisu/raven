@@ -2,7 +2,10 @@ class Token {
     constructor(public type: string, public value: string | null) { }
 }
 
+const KEYWORDS = ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"];
+
 export class JavaTokenizer {
+
     private code: string;
     private index: number = 0;
 
@@ -61,8 +64,10 @@ export class JavaTokenizer {
             const value = this.readWhile((char) => char !== quote);
             return new Token('String', value);
         }
+
         const value = this.readWhile((char) => this.isIdentifierStart(char) || this.isDigit(char));
-        return new Token('IDENTIFIER', value);
+        const type = KEYWORDS.includes(value) ? 'KEYWORD' : 'IDENTIFIER';
+        return new Token(type, value);
     }
 
     private readNumber(): Token {
@@ -160,22 +165,17 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-
+/*
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
     System.out.println("Hello, 5th World!");
     // I am a comment
     int num = 50/2;
-  }
-  /*
-  I am multiple lines >2
-  but also a comment
-  */
 }
 `;
 
-/*
+
 const tokenizer = new JavaTokenizer(javaCode);
 let token = tokenizer.getNextToken();
 while (token !== null) {
