@@ -16,12 +16,10 @@ export async function RetrieveJavaClassModelBySelectingProjectDirectory(): Class
   let tokens = [];
   let token = tokenizer.getNextToken();
   while (token !== null) {
-      tokens.push(token.value);
+      tokens.push(token);
       token = tokenizer.getNextToken();
   }
-  console.log(tokens);
   let classes = LocateClasses(tokens);
-
   return classes;
 }
 

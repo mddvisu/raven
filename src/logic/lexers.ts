@@ -1,5 +1,5 @@
-class Token {
-    constructor(public type: string, public value: string | null) { }
+export class Token {
+    constructor(public tokenType: string, public value: string | null) { }
 }
 
 const KEYWORDS = ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"];
@@ -51,7 +51,7 @@ export class JavaTokenizer {
     }
 
     private isString(): boolean {
-        return this.lastToken && this.lastToken.type == "Quotes";
+        return this.lastToken && this.lastToken.tokenType == "Quotes";
     }
 
     private readCurrent() {
@@ -84,7 +84,7 @@ export class JavaTokenizer {
     private readQuote(): Token {
         // Quotes are only 1 character, so don't want to treat multiple quotes next to it as the same token
         const value = this.readCurrent();
-        let tokenType = this.lastToken.type === "String" ? 'Endquotes' : 'Quotes';
+        let tokenType = this.lastToken.tokenType === "String" ? 'Endquotes' : 'Quotes';
         this.lastToken = new Token(tokenType, value);
         return new Token(tokenType, value);
     }

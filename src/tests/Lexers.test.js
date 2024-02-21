@@ -17,7 +17,7 @@ describe('JavaTokenizer', () => {
         let token = tokenizer.getNextToken();
 
         while (token !== null) {
-            tokens.push({ type: token.type, value: token.value });
+            tokens.push({ type: token.tokenType, value: token.value });
             token = tokenizer.getNextToken();
         }
 
