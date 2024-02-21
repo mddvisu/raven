@@ -51,7 +51,7 @@ export class JavaTokenizer {
     }
 
     private isString(): boolean {
-        return this.lastToken && this.lastToken.type == "Quotes";
+        return this.lastToken && this.lastToken.type == "QUOTES";
     }
 
     private readCurrent() {
@@ -76,7 +76,7 @@ export class JavaTokenizer {
     }
 
     private readNumber(): Token {
-        const value = this.readWhile((char) => this.isDigit(char));
+        const value = this.readWhile((char) => this.isDigit(char) || char === ".");
         this.lastToken = new Token('NUMBER', value);
         return new Token('NUMBER', value);
     }
@@ -84,7 +84,7 @@ export class JavaTokenizer {
     private readQuote(): Token {
         // Quotes are only 1 character, so don't want to treat multiple quotes next to it as the same token
         const value = this.readCurrent();
-        let tokenType = this.lastToken.type === "String" ? 'Endquotes' : 'Quotes';
+        let tokenType = this.lastToken.type === "STRING" ? 'ENDQUOTES' : 'QUOTES';
         this.lastToken = new Token(tokenType, value);
         return new Token(tokenType, value);
     }
@@ -97,8 +97,8 @@ export class JavaTokenizer {
 
     private readCurlyBrace(): Token {
         const value = this.readWhile((char) => this.isCurlyBrace(char));
-        this.lastToken = new Token('Curly Brace', value);
-        return new Token('Curly Brace', value);
+        this.lastToken = new Token('CURLY_BRACE', value);
+        return new Token('CURLY_BRACE', value);
     }
 
     private readSingleLineComment(): Token {
@@ -131,8 +131,8 @@ export class JavaTokenizer {
     private readString(): Token {
         const quote = this.lastToken.value;
         const value = this.readWhile((char) => char !== quote);
-        this.lastToken = new Token('String', value);
-        return new Token('String', value);
+        this.lastToken = new Token('STRING', value);
+        return new Token('STRING', value);
     }
 
     private skipWhitespace(): void {
