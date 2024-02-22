@@ -194,7 +194,7 @@ export class JavaTokenizer {
 }
 
 //------ Test example java code
-
+/*
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
@@ -208,4 +208,4 @@ let token = tokenizer.getNextToken();
 while (token !== null) {
     console.log(token);
     token = tokenizer.getNextToken();
-}
+}*/

@@ -1,7 +1,7 @@
 import { VariableModel, MethodModel, ClassModel, AttributesAndMethods } from '../structures/classModels';
 import { Token } from './lexers';
 
-const winkyfacehaha = "(=;";
+const ATTRIBUTE_AND_METHOD_MODIFIER_END_SYMBOLS = "(=;";
 
 
 /**
@@ -100,20 +100,19 @@ function IsClassModifier(token) {
 function IsClassKeyword(token) {
     return token.value === "class" || token.value === "interface";
 }
-function SkipAnnotations(tokens, index) {
-    if (tokens[index].value === "@") {
-        if (index < tokens.length) index ++;
-        if (tokens[index].value === "interface") {
-            while (index < tokens.length && tokens[index].value !== "{") index ++;
-            if (index >= tokens.length) {
-                console.warn("A syntax error was found in the code. Check that your annotation definitions are correct");
-                return [];
-            }
-            index += GetTokensInScope(tokens, index).length + 2;
-        } else {
-            if (index < tokens.length) index ++;
-            if (tokens[index].value === "(") index += GetTokensInScope(tokens, index).length + 2;
+function SkipAnnotation(tokens, index) {
+    if (index < tokens.length) index ++;
+    if (tokens[index].value === "interface") {
+        while (index < tokens.length && tokens[index].value !== "{") index ++;
+        if (index >= tokens.length) {
+            console.warn("A syntax error was found in the code. Check that your annotation definitions are correct");
+            return [];
         }
+        index += GetTokensInScope(tokens, index).length + 2;
+    } else {
+        if (index < tokens.length) index ++;
+        if (tokens[index].value === "(") index += GetTokensInScope(tokens, index).length + 2;
+        console.log(tokens[index]);
     }
     return index;
 }
@@ -131,9 +130,11 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
     let index = 0;
     while (index < tokens.length) {
         // Skip over any annotations
-        SkipAnnotations(tokens, index);
+        if (tokens[index].value === "@") {
+            index = SkipAnnotation(tokens, index);
+        }
         // If we run into a class modifier, or the class or interface keywords, this is a class definition, and we should start gathering the symbols
-        if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
+        else if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
             let keywordsBeforeName = [];
             let tokensAfterName = [];
             while (index < tokens.length && IsClassModifier(tokens[index])) {
@@ -172,6 +173,11 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
     return classes;
 }
 
+const ATTRIBUTE_AND_METHOD_MODIFIERS = ["public", "private", "protected", "final", "abstract", "static", "transient", "synchronized", "volatile"];
+function IsAttributeOrMethodModifier(token) {
+    return ATTRIBUTE_AND_METHOD_MODIFIERS.includes(token.value);
+}
+
 /**
  * Looks through an array of tokens for attributes and methods, and returns a structure containing an array of Variable Models (attributes)
  * and an array of Method Models (methods) based on the attributes and methods found.
@@ -187,41 +193,52 @@ export function LocateMethodsAndAttributes(tokens: Token[]): AttributesAndMethod
     }
     let index = 0;
     while (index < tokens.length) {
-        let descriptors: Token[] = [];
+        let modifiers: Token[] = [];
         let parameters: Token[] = [];
-        // TODO: Filter out annotations
-        while (index < tokens.length && tokens[index].tokenType === "KEYWORD") {
-            descriptors.push(tokens[index]);
-            index ++;
-        }
-        while (index < tokens.length && !winkyfacehaha.includes(tokens[index].value)) {
-            descriptors.push(tokens[index]);
-            console.log(tokens[index]);
-            index ++;
-        }
-        if (index < tokens.length && tokens[index].value === "=") {
-            index ++;
-            parameters = [];
-            while (index < tokens.length && tokens[index].value !== ";") {
-                parameters.push(tokens[index]);
+        if (tokens[index].value === "@") {
+            index = SkipAnnotation(tokens, index);
+        } else if (IsAttributeOrMethodModifier(tokens[index]) || tokens[index].tokenType === "KEYWORD") {
+            while (index < tokens.length && IsAttributeOrMethodModifier(tokens[index])) {
+                modifiers.push(tokens[index]);
                 index ++;
             }
-            ret.attributes.push(CreateVariableModelFromTokens(descriptors, parameters));
-        }
-        else if (index < tokens.length && tokens[index].value === "(") {
-            parameters = GetTokensInScope(tokens, index);
-            index += parameters.length + 2;
-            while (index < tokens.length && tokens[index].value !== "{") {
+            // If the syntax is correct, the next two tokens should be the type and name respectively
+            while (index < tokens.length && !ATTRIBUTE_AND_METHOD_MODIFIER_END_SYMBOLS.includes(tokens[index].value)) {
+                modifiers.push(tokens[index]);
                 index ++;
+            } 
+            if (index >= tokens.length) {
+                console.warn("A syntax error was found in the code. Check that your method and attribute definitions are correct");
+                return {attributes: [], methods: []};
             }
-            let content = GetTokensInScope(tokens, index);
-            index += content.length + 2;
-            ret.methods.push(CreateMethodModelFromTokens(descriptors, parameters));
+            // Equal sign after modifiers means that this is a defined attribute
+            if (tokens[index].value === "=") {
+                index ++;
+                parameters = [];
+                while (index < tokens.length && tokens[index].value !== ";") {
+                    parameters.push(tokens[index]);
+                    index ++;
+                }
+                ret.attributes.push(CreateVariableModelFromTokens(modifiers, parameters));
+            }
+            // Opening parinthese after modifiers means that this is a method
+            else if (tokens[index].value === "(") {
+                parameters = GetTokensInScope(tokens, index);
+                index += parameters.length + 2;
+                while (index < tokens.length && tokens[index].value !== "{") {
+                    index ++;
+                }
+                let content = GetTokensInScope(tokens, index);
+                index += content.length + 2;
+                ret.methods.push(CreateMethodModelFromTokens(modifiers, parameters));
+            }
+            // Semicolon after modifiers means that this is an undefined attribute
+            else if (tokens[index].value === ";") {
+                ret.attributes.push(CreateVariableModelFromTokens(modifiers, []));
+            }
+        } else {
+            index ++;
         }
-        else if (index < tokens.length && tokens[index].value === ";") {
-            ret.attributes.push(CreateVariableModelFromTokens(descriptors, []));
-        }
-        index ++;
     }
     return ret;
 }
@@ -253,7 +270,6 @@ export function CreateVariableModelFromTokens(descriptorTokens: Token[], valueTo
  * @returns {MethodModel} - The method model created
  */
 export function CreateMethodModelFromTokens(descriptorTokens: Token[], parameterTokens: Token[]): MethodModel {
-    console.log(descriptorTokens);
     let model: MethodModel = {name: "", parameters: [], return: "", access: "private", static: false, final: false};
     SetModifiersOfModel(descriptorTokens, model);
     // TODO: Figure out if this breaks in any scenario
