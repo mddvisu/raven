@@ -1,6 +1,9 @@
 import { VariableModel, MethodModel, ClassModel, AttributesAndMethods } from '../structures/classModels';
 import { Token } from './lexers';
 
+const winkyfacehaha = "(=;";
+
+
 /**
  * Returns all of the tokens within a certian scope indicated by {}, [], (), "", '', or <>
  *
@@ -14,6 +17,7 @@ export function GetTokensInScope(tokens: Token[], startToken: number): Token[] {
     let index: number = startToken + 1;
     let firstToken: string = tokens[startToken].value;
     let lastToken: string = "";
+    // Figure out the closing bracket token that corresponds to the opening bracket token
     switch (firstToken) {
         case "{":
             lastToken = "}";
@@ -37,6 +41,9 @@ export function GetTokensInScope(tokens: Token[], startToken: number): Token[] {
             console.warn("Invalid starting token. The token at the specified starting index must be '{', '[', '(', '\"', ''', or '<'");
             return [];
     }
+    // Reads through each token after the starting index, and counts the nummber of times it runs into the opening bracket.
+    // Each time it runs into a closing bracket, decrement this count by 1 unless the count is 0, in which case we know that 
+    // is the closing bracket to the opening bracket we started from.
     let firstTokenCount = 0;
     while (index < tokens.length) {
         if (tokens[index].value === firstToken) {
@@ -55,6 +62,63 @@ export function GetTokensInScope(tokens: Token[], startToken: number): Token[] {
 }
 
 /**
+ * Sets modifiers on a class, method, or variable model from its modifier tokens
+ *
+ * @param {Token[]} tokens - An array of tokens to look through
+ * @param {any} model - A reference to a data model to set the values of
+ */
+export function SetModifiersOfModel(modifierTokens: Token[], model: any) {
+    // Error handling for the "any" type
+    try {
+        for (const token of modifierTokens) {
+            switch (token.value) {
+                case ("public" || "private" || "protected"):
+                    model.access = token.value;
+                    break;
+                case ("static"):
+                    model.static = true;
+                    break;
+                case ("final"):
+                    model.final = true;
+                    break;
+                case ("abstract"):
+                    model.abstract = true;
+                    break;
+                case ("interface"):
+                    model.interface = true;
+                    break;
+            }
+        }
+    } catch (e) {}
+}
+
+// Comprehensive list of all modifiers that can be used with an outer class
+const CLASS_MODIFIERS = ["public", "abstract", "final"];
+function IsClassModifier(token) {
+    return CLASS_MODIFIERS.includes(token.value);
+}
+function IsClassKeyword(token) {
+    return token.value === "class" || token.value === "interface";
+}
+function SkipAnnotations(tokens, index) {
+    if (tokens[index].value === "@") {
+        if (index < tokens.length) index ++;
+        if (tokens[index].value === "interface") {
+            while (index < tokens.length && tokens[index].value !== "{") index ++;
+            if (index >= tokens.length) {
+                console.warn("A syntax error was found in the code. Check that your annotation definitions are correct");
+                return [];
+            }
+            index += GetTokensInScope(tokens, index).length + 2;
+        } else {
+            if (index < tokens.length) index ++;
+            if (tokens[index].value === "(") index += GetTokensInScope(tokens, index).length + 2;
+        }
+    }
+    return index;
+}
+
+/**
  * Searches through an array of tokens for classes, and returns them as an array of Class Models.
  *
  * @param {Token[]} tokens - An array of tokens to look through
@@ -62,33 +126,45 @@ export function GetTokensInScope(tokens: Token[], startToken: number): Token[] {
  * @returns {ClassModel[]} - An array of Class Models
  */
 export function LocateClasses(tokens: Token[]): ClassModel[] {
-
+    // Read through each token until you get to a keyword
     let classes: ClassModel[] = [];
-
     let index = 0;
     while (index < tokens.length) {
-        if (tokens[index].tokenType === "KEYWORD") {
-            let descriptorsBeforeName = [];
-            let descriptorsAfterName = [];
-            
-            while (index < tokens.length && tokens[index].value !== "class" && tokens[index].value !== "interface") {
-                descriptorsBeforeName.push(tokens[index]);
+        // Skip over any annotations
+        SkipAnnotations(tokens, index);
+        // If we run into a class modifier, or the class or interface keywords, this is a class definition, and we should start gathering the symbols
+        if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
+            let keywordsBeforeName = [];
+            let tokensAfterName = [];
+            while (index < tokens.length && IsClassModifier(tokens[index])) {
+                keywordsBeforeName.push(tokens[index]);
                 index ++;
             }
-
-            descriptorsBeforeName.push(tokens[index]);
-            index ++;
-            descriptorsBeforeName.push(tokens[index]);
-            index ++;
-
+            // If the syntax is correct, the next two tokens should be the class keyword and class name respectively
+            if (!(index >= tokens.length - 2) && IsClassKeyword(tokens[index])) {
+                keywordsBeforeName.push(tokens[index]);
+                index ++;
+                keywordsBeforeName.push(tokens[index]);
+                index ++;
+            } else {
+                console.warn("A syntax error was found in the code. Check that your class definitions are correct");
+                return [];
+            }
+            // Gather all remaining tokens up to the opening curly brace
             while (index < tokens.length && tokens[index].value !== "{") {
-                descriptorsAfterName.push(tokens[index]);
+                tokensAfterName.push(tokens[index]);
                 index ++;
+                if (index >= tokens.length) {
+                    console.warn("A syntax error was found in the code. Check that your class definitions are correct");
+                    return [];
+                }
             }
+            // Gather all tokens within the curly braces
             let tokensInClass = GetTokensInScope(tokens, index);
-            
+            // Create the class model from the tokens gathered
+            classes.push(CreateClassModelFromTokens(keywordsBeforeName, tokensAfterName, tokensInClass));
+            // Update the index to start after the class content to continue parsing through the rest of the code
             index += tokensInClass.length + 2;
-            classes.push(CreateClassModelFromTokens(descriptorsBeforeName, descriptorsAfterName, tokensInClass));
         } else {
             index ++;
         }
@@ -118,7 +194,7 @@ export function LocateMethodsAndAttributes(tokens: Token[]): AttributesAndMethod
             descriptors.push(tokens[index]);
             index ++;
         }
-        while (index < tokens.length && tokens[index].tokenType !== "KEYWORD") {
+        while (index < tokens.length && !winkyfacehaha.includes(tokens[index].value)) {
             descriptors.push(tokens[index]);
             console.log(tokens[index]);
             index ++;
@@ -160,19 +236,7 @@ export function LocateMethodsAndAttributes(tokens: Token[]): AttributesAndMethod
  */
 export function CreateVariableModelFromTokens(descriptorTokens: Token[], valueTokens: Token[]): VariableModel {
     let model: VariableModel = {name: "", value: undefined, type: "", access: "private", static: false, final: false};
-    for (const token of descriptorTokens) {
-        switch (token.value) {
-            case ("public" || "private" || "protected"):
-                model.access = token.value;
-                break;
-            case ("static"):
-                model.static = true;
-                break;
-            case ("final"):
-                model.final = true;
-                break;
-        }
-    }
+    SetModifiersOfModel(descriptorTokens, model);
     // TODO: Figure out if this breaks in any scenario
     model.type = descriptorTokens[descriptorTokens.length - 2].value;
     model.name = descriptorTokens[descriptorTokens.length - 1].value;
@@ -191,21 +255,9 @@ export function CreateVariableModelFromTokens(descriptorTokens: Token[], valueTo
 export function CreateMethodModelFromTokens(descriptorTokens: Token[], parameterTokens: Token[]): MethodModel {
     console.log(descriptorTokens);
     let model: MethodModel = {name: "", parameters: [], return: "", access: "private", static: false, final: false};
-    for (const token of descriptorTokens) {
-        switch (token.value) {
-            case ("public" || "private"|| "protected"):
-                model.access = token.value;
-                break;
-            case ("static"):
-                model.static = true;
-                break;
-            case ("final"):
-                model.final = true;
-                break;
-        }
-    }
+    SetModifiersOfModel(descriptorTokens, model);
     // TODO: Figure out if this breaks in any scenario
-    if (!descriptorTokens.includes(descriptorTokens[descriptorTokens.length - 2])) {
+    if (descriptorTokens[descriptorTokens.length - 2] && !(descriptorTokens[descriptorTokens.length - 2].tokenType === "KEYWORD")) {
         model.return = descriptorTokens[descriptorTokens.length - 2].value;
     }
     model.name = descriptorTokens[descriptorTokens.length - 1].value;
@@ -224,22 +276,7 @@ export function CreateMethodModelFromTokens(descriptorTokens: Token[], parameter
  */
 export function CreateClassModelFromTokens(descriptorTokensBeforeName: Token[], descriptorTokensAfterName: Token[], contentTokens: Token[]): ClassModel {
     let model: ClassModel = {name: "", attributes: [], methods: [], abstract: false, interface: false, access: "public", extends: "", static: false, implements: []};
-    for (const token of descriptorTokensBeforeName) {
-        switch (token.value) {
-            case ("public" || "private" || "protected"):
-                model.access = token.value;
-                break;
-            case ("static"):
-                model.static = true;
-                break;
-            case ("abstract"):
-                model.abstract = true;
-                break;
-            case ("interface"):
-                model.interface = true;
-                break;
-        }
-    }
+    SetModifiersOfModel([...descriptorTokensBeforeName, ...descriptorTokensAfterName], model);
     // TODO: Figure out if this breaks in any scenario
     model.name = descriptorTokensBeforeName[descriptorTokensBeforeName.length - 1].value;
 
