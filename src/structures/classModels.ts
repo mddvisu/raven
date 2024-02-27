@@ -2,13 +2,11 @@
 
 export interface VariableModel {
     name: string,
-    value: any,
+    value: string,
     type: string,
-    access: string,
-    static: boolean,
-    final: boolean
+    modifiers: string[]
 }
-
+/*
 export const VariableModelDefaults: VariableModel = {
     name: "", 
     value: undefined, 
@@ -17,17 +15,16 @@ export const VariableModelDefaults: VariableModel = {
     static: false, 
     final: false
 }
-
+*/
 
 export interface MethodModel {
     name: string,
     parameters: VariableModel[],
     return: string,
-    static: boolean,
-    access: string,
-    final: boolean
+    modifiers: string[],
+    generics: string[]
 }
-
+/*
 export const MethodModelDefaults: MethodModel = {
     name: "", 
     parameters: [],
@@ -36,20 +33,19 @@ export const MethodModelDefaults: MethodModel = {
     static: false, 
     final: false
 }
-
+*/
 
 export interface ClassModel {
     name: string,
     attributes: VariableModel[],
     methods: MethodModel[],
-    abstract: boolean,
     interface: boolean,
-    access: string,
     extends: string,
-    static: boolean,
-    implements: string[]
+    implements: string[],
+    modifiers: string[],
+    generics: string[]
 }
-
+/*
 export const ClassModelDefaults: ClassModel = {
     name: "", 
     attributes: [],
@@ -61,7 +57,7 @@ export const ClassModelDefaults: ClassModel = {
     static: false,
     implements: []
 }
-
+*/
 
 export interface AttributesAndMethods {
     attributes: VariableModel[],

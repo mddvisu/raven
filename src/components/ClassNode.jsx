@@ -7,10 +7,8 @@ export default memo(({ data, isConnectable }) => {
       <div className="class-node">
         <button value={data.classIndex} className="button" onClick={ data.onClick } >{data.classData.name}</button>
         <div className="class-node" style={{textAlign: "left"}}>
-            <h2>Access: {data.classData.access}</h2>
+            <h2>Modifiers: {data.classData.modifiers.toString()}</h2>
             <h2>Extends: {data.classData.extends}</h2>
-            <h2>Static: {data.classData.static.toString()}</h2>
-            <h2>Abstract: {data.classData.abstract.toString()}</h2>
             <h2>Interface: {data.classData.interface.toString()}</h2>
             <h2>Attributes: </h2>
             <div className="class-node" style={{textAlign: "left", fontSize: "75%"}}>

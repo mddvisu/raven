@@ -63,16 +63,14 @@ const ClosableTab = ({classData}) => {
                 child: () => 
                 <div style={{textAlign: "left"}}>
                     <h1>{data.name}</h1>
-                    <h2>Access: {data.access}</h2>
+                    <h2>Modifiers: {data.modifiers.toString()}</h2>
                     <h2>Extends: {data.extends}</h2>
-                    <h2>Static: {data.static.toString()}</h2>
-                    <h2>Abstract: {data.abstract.toString()}</h2>
                     <h2>Interface: {data.interface.toString()}</h2>
                     <h2>Attributes: </h2>
                     <div style={{fontSize: "75%"}} >
                         {data.attributes.map((attribute) => (
                             <h3>
-                                - {attribute.name}
+                                - {attribute.modifiers.toString()} {attribute.type} {attribute.name} = {attribute.value}
                             </h3>
                         ))}
                     </div>
@@ -80,7 +78,7 @@ const ClosableTab = ({classData}) => {
                     <div style={{fontSize: "75%"}} >
                         {data.methods.map((method) => (
                             <h3>
-                                - {method.name}
+                                - {method.modifiers.toString()} {method.return} {method.name} ({method.parameters.toString()})
                             </h3>
                         ))}
                     </div>
