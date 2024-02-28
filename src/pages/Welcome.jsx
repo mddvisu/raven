@@ -1,31 +1,24 @@
-//import { SelectFolderPath } from '../logic/folderUtils';
-import ravenLogo from "../assets/raven-logo.png"
 import { Link } from "react-router-dom";
+import ravenLogo from "../assets/raven-logo.png";
 
 const Welcome = () => {
   return (
-    <div className='text-white mt-4 text-center flex flex-row'>
-      <div className="w-1/3">
-        <h1 className=' text-8xl font-extrabold underline' style={{ fontFamily: 'Consolas' }}> WELCOME </h1>
-        <p className=' text-7xl font-extrabold' style={{ fontFamily: 'Consolas' }}> 2</p>
-        <p className=' text-7xl font-extrabold underline' style={{ fontFamily: 'Consolas' }}> R A V E N</p>
+    <div className='text-white flex flex-col md:flex-row justify-center items-center text-center mt-4'>
+      <div className="md:w-1/3 p-4">
+        <h1 className='text-6xl md:text-8xl font-extrabold underline' style={{ fontFamily: 'Consolas' }}>WELCOME</h1>
+        <p className='text-5xl md:text-7xl font-extrabold' style={{ fontFamily: 'Consolas' }}>TO</p>
+        <p className='text-5xl md:text-7xl font-extrabold underline' style={{ fontFamily: 'Consolas' }}>RAVEN</p>
         <p className="mt-10">2024 UNCO Properties Raven Inc.</p>
-
-        <button className="w-[170px] mt-64 px-4 bg-black rounded-2xl  hover:border-[#646cff] border-[#2f315f] border-4 outline-none focus:outline-none" >
-          <Link className="text-2xl font-bold text-[#646cff] "style={{ fontFamily: 'Consolas' }} to="/Home">Proceed</Link>
-
-        </button>
-
+        <Link to="/Home">
+          <button className="w-40 h-12 mt-10 bg-black rounded-2xl hover:border-[#646cff] border-[#2f315f] border-4 outline-none focus:outline-none focus:ring-4 focus:ring-[#646cff] transition ease-in duration-200">
+            <span className="text-xl font-bold text-[#646cff]" style={{ fontFamily: 'Consolas' }}>Proceed</span>
+          </button>
+        </Link>
       </div>
-      
-
-      <div className="w-2/3">
-      <img className="w-[780px]" src={ravenLogo} alt="Raven Logo" />
-        {/* <button className="mt-4" onClick={SelectFolderPath}>
-          Open Project Directory
-        </button> */}
+      <div className="md:w-2/3 mt-10 md:mt-0 p-4">
+        <img className="max-w-full h-auto" src={ravenLogo} alt="Raven Logo" />
       </div>
-      </div>
+    </div>
   );
 };
 
