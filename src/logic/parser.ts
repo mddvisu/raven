@@ -1,4 +1,4 @@
-import { VariableModel, MethodModel, ClassModel, AttributesAndMethods as Members } from '../structures/classModels';
+import { VariableModel, MethodModel, ClassModel, Members } from '../structures/classModels';
 import { Token } from './lexers';
 
 const CLASS_MODIFIERS = ["public", "abstract", "final"];

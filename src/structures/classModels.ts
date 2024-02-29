@@ -1,4 +1,4 @@
-// @ts-nocheck
+const ACCESS_MODIFIERS = ["public", "private", "protected"];
 
 export interface VariableModel {
     name: string,
@@ -6,17 +6,6 @@ export interface VariableModel {
     type: string,
     modifiers: string[]
 }
-/*
-export const VariableModelDefaults: VariableModel = {
-    name: "", 
-    value: undefined, 
-    type: "", 
-    access: "private", 
-    static: false, 
-    final: false
-}
-*/
-
 export interface MethodModel {
     name: string,
     parameters: VariableModel[],
@@ -24,17 +13,6 @@ export interface MethodModel {
     modifiers: string[],
     generics: string[]
 }
-/*
-export const MethodModelDefaults: MethodModel = {
-    name: "", 
-    parameters: [],
-    return: "",
-    access: "private", 
-    static: false, 
-    final: false
-}
-*/
-
 export interface ClassModel {
     name: string,
     attributes: VariableModel[],
@@ -45,21 +23,19 @@ export interface ClassModel {
     modifiers: string[],
     generics: string[]
 }
-/*
-export const ClassModelDefaults: ClassModel = {
-    name: "", 
-    attributes: [],
-    methods: [],
-    abstract: false,
-    interface: false,
-    access: "public",
-    extends: "",
-    static: false,
-    implements: []
-}
-*/
-
-export interface AttributesAndMethods {
+export interface Members {
     attributes: VariableModel[],
     methods: MethodModel[]
+}
+export function GetModelAccess(dataModel) {
+    return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
+}
+export function GetModelStatic(dataModel) {
+    return dataModel.modifiers.includes("static");
+}
+export function GetModelFinal(dataModel) {
+    return dataModel.modifiers.includes("final");
+}
+export function GetModelAbstract(dataModel) {
+    return dataModel.modifiers.includes("abstract");
 }

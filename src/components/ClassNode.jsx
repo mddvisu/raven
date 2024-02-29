@@ -10,8 +10,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import ClassIcon from '@mui/icons-material/Class';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
 import { Handle, Position } from 'reactflow';
-
-const ACCESS_MODIFIERS = ["public", "private", "protected"];
+import { GetModelAccess, GetModelStatic, GetModelFinal, GetModelAbstract } from '../structures/classModels';
 
 // Function to determine the color class based on attribute type
 function getAttributeType(type) {
@@ -28,7 +27,6 @@ function getAttributeType(type) {
       return "bg-black p-1"; // Default color for unknown types
   }
 }
-
 
 function getAccessTypeIcon(access) {
   switch (access) {
@@ -48,7 +46,6 @@ function getAccessTypeIcon(access) {
       return null; // No icon for other access types
   }
 }
-
 
 function getClassColor(abstract, interFace) {
   if (interFace) {
@@ -133,22 +130,10 @@ function getClasAccessColor(access) {
       return null; // No icon for other access types
   }
 }
-function getModelAccess(dataModel) {
-  return dataModel.modifiers.filter(element => ACCESS_MODIFIERS.includes(element))[0];
-}
-function getModelStatic(dataModel) {
-  return dataModel.modifiers.includes("static");
-}
-function getModelFinal(dataModel) {
-  return dataModel.modifiers.includes("final");
-}
-function getModelAbstract(dataModel) {
-  return dataModel.modifiers.includes("abstract");
-}
 
 const ClassNode = memo(({ data, isConnectable }) => {
   return (
-    <div className={`flex border-4 border-white p-2 rounded ${getClassColor(getModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
+    <div className={`flex border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
       <Handle
         type="target"
         position={Position.Top}
@@ -157,8 +142,8 @@ const ClassNode = memo(({ data, isConnectable }) => {
       <div className="flex flex-col flex-grow relative">
         <div className="flex flex-grow items-center justify-center">
           <div className="absolute top-0 right-0 p-1 bg-black rounded-xl">
-            {getClassIcon(getModelStatic(data.classData), getModelFinal(data.classData), getModelStatic(data.classData))}
-            {getFinalOrStatic(getModelFinal(data.classData), getModelStatic(data.classData))}&nbsp;
+            {getClassIcon(GetModelStatic(data.classData), GetModelFinal(data.classData), GetModelStatic(data.classData))}
+            {getFinalOrStatic(GetModelFinal(data.classData), GetModelStatic(data.classData))}&nbsp;
           </div>
         </div>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
@@ -169,7 +154,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
             <p className='font-bold text-[16px] mr-2 ml-1'>ACCESS</p>
           </div>
           <div className={`${getClasAccessColor(getClasAccess(data.classData))} rounded-3xl ml-2 mr-2 text-[16px] items-center flex justify-center`}>
-              {getClasAccess(getModelAccess(data.classData))}&nbsp;
+              {getClasAccess(GetModelAccess(data.classData))}&nbsp;
               {getClasAccess(data.classData)}
             </div>
           <div className="flex items-center">
@@ -178,8 +163,8 @@ const ClassNode = memo(({ data, isConnectable }) => {
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.attributes.map((attribute, index) => (
               <span className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
-              {getAccessTypeIcon(getModelAccess(attribute))}
-              {getFinalOrStatic(getModelStatic(attribute), getModelFinal(attribute))}
+              {getAccessTypeIcon(GetModelAccess(attribute))}
+              {getFinalOrStatic(GetModelStatic(attribute), GetModelFinal(attribute))}
               &nbsp;{attribute.name} &nbsp; </span>
             ))}
           </div>
@@ -189,8 +174,8 @@ const ClassNode = memo(({ data, isConnectable }) => {
           <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.methods.map((method, index) => (
               <span className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
-              {getAccessTypeIcon(getModelAccess(method))}
-              {getFinalOrStatic(getModelStatic(method), getModelFinal(method))}
+              {getAccessTypeIcon(GetModelAccess(method))}
+              {getFinalOrStatic(GetModelStatic(method), GetModelFinal(method))}
               &nbsp;{method.name} &nbsp; </span>
             ))}
           </div>
