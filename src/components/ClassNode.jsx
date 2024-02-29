@@ -9,8 +9,7 @@ import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ClassIcon from '@mui/icons-material/Class';
 import PublicOffIcon from '@mui/icons-material/PublicOff';
-
-
+import { Handle, Position } from 'reactflow';
 
 
 // Function to determine the color class based on attribute type
@@ -138,6 +137,11 @@ function getClasAccessColor(access) {
 const ClassNode = memo(({ data, isConnectable }) => {
   return (
     <div className={`flex border-4 border-white p-2 rounded ${getClassColor(data.classData.abstract, data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
+      <Handle
+        type="target"
+        position={Position.Top}
+        isConnectable={isConnectable}
+      />
       <div className="flex flex-col flex-grow relative">
         <div className="flex flex-grow items-center justify-center">
           <div className="absolute top-0 right-0 p-1 bg-black rounded-xl">
@@ -180,6 +184,11 @@ const ClassNode = memo(({ data, isConnectable }) => {
           </div>
         </div>
       </div>
+      <Handle
+        type="source"
+        position={Position.Bottom}
+        isConnectable={isConnectable}
+      />
     </div>
   );
 });

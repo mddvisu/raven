@@ -1,14 +1,14 @@
 {
   "files": {
-    "main.css": "/static/css/main.eb24af7c.css",
-    "main.js": "/static/js/main.35910468.js",
+    "main.css": "/static/css/main.dce10149.css",
+    "main.js": "/static/js/main.0a1bb3bf.js",
     "static/media/raven-logo.png": "/static/media/raven-logo.d0ec48e62454a0e95d86.png",
     "index.html": "/index.html",
-    "main.eb24af7c.css.map": "/static/css/main.eb24af7c.css.map",
-    "main.35910468.js.map": "/static/js/main.35910468.js.map"
+    "main.dce10149.css.map": "/static/css/main.dce10149.css.map",
+    "main.0a1bb3bf.js.map": "/static/js/main.0a1bb3bf.js.map"
   },
   "entrypoints": [
-    "static/css/main.eb24af7c.css",
-    "static/js/main.35910468.js"
+    "static/css/main.dce10149.css",
+    "static/js/main.0a1bb3bf.js"
   ]
 }
