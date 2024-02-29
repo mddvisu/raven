@@ -198,18 +198,12 @@ export class JavaTokenizer {
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
-<<<<<<< HEAD
     System.out.println("Hello, 5th World!");
     // I am a comment
     int num = 50/2;
   }
   /* I am multiple lines >2 
-  but also a comment}*/`;
-=======
-    System.out.println(damageDealt + "  has been deducted from Mr. Wobbles health! " + "Health Bar: " + health);
-}
-`;
->>>>>>> main
+  but also a comment}`;
 
 
 const tokenizer = new JavaTokenizer(javaCode);
