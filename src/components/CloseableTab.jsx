@@ -55,15 +55,26 @@ const ClosableTab = ({classData}) => {
             value: `${openTabsCount + 1}`, // Incrementing count when new tab is created
             label: `${data.name}`
         };
+
+        const getBackgroundColor = () => {
+            if (data.interface) {
+              return 'bg-[#B03A2E]'; // Interface 
+            } else if (data.abstract) {
+              return 'bg-[#7D3C98]'; // Abstract
+            } else {
+              return 'bg-[#148F77]'; // Normal
+            }
+          };
+
         setTabs([...tabs, newTab]);
         setPanels([
             ...panels,
             {
                 value: `${openTabsCount + 1}`,
                 child: () => 
-                <div className="w-[500px] bg-gray-400">
-                    <div style={{textAlign: "left"}}>
-                        <h1>{data.name}</h1>
+                <div className={` ${getBackgroundColor()} w-[500px]  items-center border-4 border-black-500 rounded-2xl m-2 p-3 font-mono `}>
+                    <div style={{textAlign: "left", align: "center"}}>
+                        <h1 className="text-center mb-2 bg-yellow-500 rounded-xl p-1">{data.name}</h1>
                         <h2>Access: {data.access}</h2>
                         <h2>Extends: {data.extends}</h2>
                         <h2>Static: {data.static.toString()}</h2>
@@ -171,16 +182,16 @@ const ClosableTab = ({classData}) => {
 
                     {tabs.map((tab) => (
                         <Tab
-                            icon={<CloseIcon onClick={() => handleClose(tab.value)} />}
+                            icon={<CloseIcon className="hover:bg-red-700 rounded-full"onClick={() => handleClose(tab.value)} />}
                             iconPosition="end"
-                            className="bg-white hover:bg-gray-900 mb-4"
+                            className="bg-white hover:bg-gray-900 mb-4 rounded-2xl"
                             style={{ color: 'white' }}
                             key={tab.value} label={tab.label} value={tab.value} />
                     ))}
                 </TabList>
                 <TabPanel value="1" >
                     {/* <div style={{ width: "610px", height: "440px", background: 'black' }}> */}
-                    <div className="w-[610px] h-[440px] bg-gray-800 text-white rounded-2xl">
+                    <div className="w-[610px] h-[440px] bg-[#222831] text-white rounded-2xl">
                         <ReactFlow
                             nodes={nodes}
                             edges={edges}
