@@ -8,6 +8,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import Tooltip from '@mui/material/Tooltip';
 import PaletteIcon from '@mui/icons-material/Palette';
 import ClassIcon from '@mui/icons-material/Class';
+import PublicOffIcon from '@mui/icons-material/PublicOff';
 
 
 
@@ -34,13 +35,13 @@ function getAccessTypeIcon(access) {
     case "public":
       return (
         <Tooltip title="Public">
-          <LockOpenIcon fontSize='small'className='rounded-xl bg-green-500 p-1 hover:'/>
+          <LockOpenIcon fontSize='small'className='rounded-xl bg-green-600 p-1 hover:'/>
         </Tooltip>
       );
     case "private":
       return (
         <Tooltip title="Private">
-          <LockIcon fontSize='small'className='rounded-xl bg-red-500 p-1' />
+          <LockIcon fontSize='small'className='rounded-xl bg-red-600 p-1' />
         </Tooltip>
       );
     default:
@@ -51,12 +52,12 @@ function getAccessTypeIcon(access) {
 
 function getClassColor(abstract, interFace) {
   if (interFace) {
-    return "bg-purple-700"; // Color for interface
+    return "bg-gradient-to-b from-[#2922c6] to-[#b279f2]"; // Color for interface
   } else if (abstract) {
-    return "bg-orange-600"; // Color for abstract
+    return "bg-gradient-to-b from-orange-500 to-[#e9a14f]"; // Color for abstract 
   }
   else{
-    return "bg-gray-600";
+    return "bg-gradient-to-b from-[#181e29] to-[#465970]";
   }
 }
 function getClassIcon(abstract, interFace, isStatic){
@@ -101,7 +102,38 @@ function getFinalOrStatic(isFinal, isStatic) {
     return null; // No icon for non-final and non-static attributes
   }
 }
-
+function getClasAccess(access) {
+  switch (access) {
+    case "public":
+      return (
+        <Tooltip title="Public">
+          <PublicIcon fontSize='small'className='rounded-xl bg-green-500  hover:'/>
+        </Tooltip>
+      );
+    case "private":
+      return (
+        <Tooltip title="Private">
+          <PublicOffIcon fontSize='small'className='rounded-xl bg-red-500 hover:' />
+        </Tooltip>
+      );
+    default:
+      return null; // No icon for other access types
+  }
+}
+function getClasAccessColor(access) {
+  switch (access) {
+    case "public":
+      return (
+        "bg-green-600"
+      );
+    case "private":
+      return (
+        "bg-red-600"
+      );
+    default:
+      return null; // No icon for other access types
+  }
+}
 
 const ClassNode = memo(({ data, isConnectable }) => {
   return (
@@ -113,23 +145,23 @@ const ClassNode = memo(({ data, isConnectable }) => {
             {getFinalOrStatic(data.classData.final, data.classData.static)}&nbsp;
           </div>
         </div>
-        <div className='bg-gray-900 rounded-xl flex-grow flex flex-col mt-7'>
-          <button value={data.classIndex} className=" m-2 rounded-xl bg-yellow-600 font-small text-white font-bold w-[40%] p-1"
+        <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
+          <button value={data.classIndex} className="border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
             onClick={data.onClick}>{data.classData.name}
           </button>
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 ml-1'>ACCESS</p>
           </div>
-          <div className="bg-green-500 rounded-3xl ml-2 mr-2 text-[16px]">
-              <PublicIcon fontSize='small'/>
+          <div className={`${getClasAccessColor(data.classData.access)} rounded-3xl ml-2 mr-2 text-[16px] items-center flex justify-center`}>
+              {getClasAccess(data.classData.access)}&nbsp;
               {data.classData.access}
             </div>
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>ATTRIBUTES</p>
           </div>
-          <div className="ml-2" style={{ textAlign: "left", fontSize: "16px" }}>
+          <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.attributes.map((attribute, index) => (
-              <span className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 mb-1`} key={index}>  &nbsp;
+              <span className={`label inline-block rounded-xl ${getAttributeType(attribute.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(attribute.access)}
               {getFinalOrStatic(attribute.static, attribute.final)}
               &nbsp;{attribute.name} &nbsp; </span>
@@ -138,9 +170,9 @@ const ClassNode = memo(({ data, isConnectable }) => {
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>METHODS</p>
           </div>
-          <div className="ml-2" style={{ textAlign: "left", fontSize: "16px" }}>
+          <div className="ml-2" style={{ textAlign: "left", fontSize: "15px" }}>
             {data.classData.methods.map((method, index) => (
-              <span className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 mb-1 p-[2px]`} key={index}>  &nbsp;
+              <span className={`label inline-block rounded-xl ${getAttributeType(method.type)} mr-1 p-[2px] items-center justify-center`} key={index}>  &nbsp;
               {getAccessTypeIcon(method.access)}
               {getFinalOrStatic(method.static, method.final)}
               &nbsp;{method.name} &nbsp; </span>
