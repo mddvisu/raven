@@ -20,6 +20,7 @@ export async function RetrieveJavaClassModelBySelectingProjectDirectory(): Class
       token = tokenizer.getNextToken();
   }
   let classes = LocateClasses(tokens);
+  console.log(classes);
   return classes;
 }
 

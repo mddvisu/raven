@@ -196,7 +196,7 @@ export function LocateMembers(tokens: Token[]): Members {
         let methodGenericTokens: Token[] = [];
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
-        } else if (IsMemberModifier(tokens[index]) || tokens[index].tokenType === "KEYWORD") {
+        } else if (IsMemberModifier(tokens[index]) || tokens[index].type === "KEYWORD") {
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
                 index ++;
