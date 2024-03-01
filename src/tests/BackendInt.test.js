@@ -1,5 +1,5 @@
 // Import the JavaTokenizer class from the lexers.ts file
-import { JavaTokenizer } from '../logic/lexers';
+/*import { JavaTokenizer } from '../logic/lexers';
 
 const javaCode = `
 public class HelloWorld {
@@ -8,11 +8,11 @@ public class HelloWorld {
     // I am a comment
     int num = 50/2;
   }
-  /*I am multiple lines
-  but also a comment*/
-}`;
+  I am multiple lines
+  but also a 
+ `;
 
-/*test('JavaTokenizer should tokenize Java code correctly', () => {
+  test('JavaTokenizer should tokenize Java code correctly', () => {
 // Instantiate a JavaTokenizer object with the Java code
   const tokenizer = new JavaTokenizer(javaCode);
 
@@ -69,7 +69,7 @@ public class HelloWorld {
   expect(tokens).toEqual(expectedTokens);
 });
 
-/*test('JavaTokenizer should tokenize method invocations with arguments correctly', () => {
+  test('JavaTokenizer should tokenize method invocations with arguments correctly', () => {
   const javaCode = `
       public class TestClass {
           public static void main(String[] args) {
@@ -108,4 +108,4 @@ public class HelloWorld {
   }
 
   expect(tokens).toEqual(expectedTokens);
-});*/
+});
