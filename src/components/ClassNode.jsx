@@ -133,7 +133,7 @@ function getClasAccessColor(access) {
 
 const ClassNode = memo(({ data, isConnectable }) => {
   return (
-    <div className={`flex border-4 border-white p-2 rounded ${getClassColor(GetModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
+    <div className={`flex border-4 border-white p-2 overflow-auto rounded ${getClassColor(GetModelAbstract(data.classData), data.classData.interface)} text-white rounded-xl w-[300px] h-[350px]`}>
       <Handle
         type="target"
         position={Position.Top}
@@ -147,16 +147,12 @@ const ClassNode = memo(({ data, isConnectable }) => {
           </div>
         </div>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
-          <button value={data.classIndex} className="border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
-            onClick={data.onClick}>{data.classData.name}
-          </button>
-          <div className="flex items-center">
-            <p className='font-bold text-[16px] mr-2 ml-1'>ACCESS</p>
-          </div>
-          <div className={`${getClasAccessColor(getClasAccess(data.classData))} rounded-3xl ml-2 mr-2 text-[16px] items-center flex justify-center`}>
+          <button value={data.classIndex} className="items-center flex border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
+            onClick={data.onClick}>&nbsp;
               {getClasAccess(GetModelAccess(data.classData))}&nbsp;
               {getClasAccess(data.classData)}
-            </div>
+              {data.classData.name}
+          </button>
           <div className="flex items-center">
             <p className='font-bold text-[16px] mr-2 mt-2 ml-1'>ATTRIBUTES</p>
           </div>
