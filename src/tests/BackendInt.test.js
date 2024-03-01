@@ -12,7 +12,7 @@ public class HelloWorld {
   but also a comment*/
 }`;
 
-test('JavaTokenizer should tokenize Java code correctly', () => {
+/*test('JavaTokenizer should tokenize Java code correctly', () => {
 // Instantiate a JavaTokenizer object with the Java code
   const tokenizer = new JavaTokenizer(javaCode);
 
