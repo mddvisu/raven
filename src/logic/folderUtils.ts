@@ -13,14 +13,14 @@ export async function RetrieveJavaClassModelBySelectingProjectDirectory(): Class
   let projectDir: string = await os.showFolderDialog('Open a project Directory', {});
   let code = await GetRecursiveContentsOfDirectoryByExtension(projectDir, "java");
   const tokenizer = new JavaTokenizer(code);
-  let tokens: string[] = [];
+  let tokens = [];
   let token = tokenizer.getNextToken();
   while (token !== null) {
-      tokens.push(token.value);
+      tokens.push(token);
       token = tokenizer.getNextToken();
   }
   let classes = LocateClasses(tokens);
-
+  console.log(classes);
   return classes;
 }
 

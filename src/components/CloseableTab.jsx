@@ -181,7 +181,7 @@ const ClosableTab = ({classData}) => {
                                     color: '#FFFFFF',
                                 },
                                     style: {
-                                    strokeWidth: 2,
+                                    strokeWidth: 5,
                                     stroke: '#FFFFFF',
                                 },
                             };
