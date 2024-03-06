@@ -1,11 +1,10 @@
 // Define a Token class to represent the different types of tokens
-class Token {
+export class Token {
     constructor(public type: string, public value: string | null) { }
 }
 
 // Define a list of keywords in the Java language
 const KEYWORDS = ["abstract", "boolean", "break", "byte", "case", "catch", "char", "class", "continue", "default", "do", "double", "else", "enum", "extends", "final", "finally", "float", "for", "if", "implements", "import", "instanceof", "int", "interface", "long", "new", "package", "private", "protected", "public", "return", "short", "static", "super", "switch", "this", "throw", "throws", "try", "void", "while"];
-
 // Create a class for tokenizing Java code
 export class JavaTokenizer {
 
@@ -204,9 +203,12 @@ export class JavaTokenizer {
 const javaCode = `
 public class HelloWorld {
   public static void main(String[] args) {
-    System.out.println(damageDealt + "  has been deducted from Mr. Wobbles health! " + "Health Bar: " + health);
-}
-`;
+    System.out.println("Hello, 5th World!");
+    // I am a comment
+    int num = 50/2;
+  }
+  I am multiple lines >2 
+  but also a comment}`;
 
 
 const tokenizer = new JavaTokenizer(javaCode);
