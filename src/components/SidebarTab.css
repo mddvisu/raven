@@ -1,3 +1,4 @@
+/* SidebarTab.css */
 .sidebar-tab {
     padding: 10px;
     border: 1px solid #ccc;
@@ -5,8 +6,8 @@
 }
 
 .title {
-    font-size: 1.5em;
-    margin-bottom: 10px;
+    font-size: 1.2em;
+    margin-bottom: 15px;
 }
 
 ul {
@@ -16,7 +17,25 @@ ul {
 
 li {
     margin: 5px 0;
+}
+
+.class-button {
+
+    display: block;
+    width: 100%;
+    background-color: linear-gradient(to bottom, #181e29, #465970);
+    color: white;
+    border: 1px solid white;
     padding: 8px;
-    border: 1px solid #ddd;
     border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.5rem;
+}
+
+.class-button:hover {
+    background-color: #0056b3;
 }

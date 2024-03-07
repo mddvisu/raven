@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { RetrieveJavaClassModelBySelectingProjectDirectory } from '../logic/folderUtils';
 import RavenLogo from '../assets/raven-logo.png';
-import { CloseableTab } from '../components';
-import { Link, SidebarTab } from 'react-router-dom';
+import { CloseableTab, SidebarTab } from '../components';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const [data, setData] = useState([]);
