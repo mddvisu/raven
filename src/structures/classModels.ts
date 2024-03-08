@@ -4,14 +4,16 @@ export interface VariableModel {
     name: string,
     value: string,
     type: string,
-    modifiers: string[]
+    modifiers: string[],
+    line: number
 }
 export interface MethodModel {
     name: string,
     parameters: VariableModel[],
     return: string,
     modifiers: string[],
-    generics: string[]
+    generics: string[],
+    line: number
 }
 export interface ClassModel {
     name: string,
@@ -21,7 +23,9 @@ export interface ClassModel {
     extends: string,
     implements: string[],
     modifiers: string[],
-    generics: string[]
+    generics: string[],
+    filePath: string,
+    line: number
 }
 export interface Members {
     attributes: VariableModel[],

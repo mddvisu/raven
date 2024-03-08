@@ -105,7 +105,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
         }
         // If we run into a class modifier, or the class or interface keywords, this is a class definition, and we should start gathering the symbols
         else if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
-            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: []};
+            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: [], filePath: "", line: tokens[index].line};
             // Gather modifiers
             while (index < tokens.length && IsClassModifier(tokens[index])) {
                 model.modifiers.push(tokens[index].value);
@@ -197,6 +197,7 @@ export function LocateMembers(tokens: Token[]): Members {
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
         } else if (IsMemberModifier(tokens[index]) || tokens[index].type === "KEYWORD") {
+            let line = tokens[index].line;
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
                 index ++;
@@ -254,7 +255,8 @@ export function LocateMembers(tokens: Token[]): Members {
                     return: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
                     name: nameToken.value, 
                     parameters: [],
-                    generics: []
+                    generics: [],
+                    line: line
                 });
             }
             // Semicolon here means that this is the end of an attribute definition
@@ -264,7 +266,8 @@ export function LocateMembers(tokens: Token[]): Members {
                     modifiers: [...modifierTokens.map((t) => t.value)], 
                     type: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replaceAll(",", "")
+                    value: valueTokens.map((t) => t.value).toString().replaceAll(",", ""),
+                    line: line
                 });
             }
         } else {
