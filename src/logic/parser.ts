@@ -152,7 +152,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
             }
             // If there are no syntax errors, there should be an opening curly brace here
             if (tokens[index].value !== "{") {
-                console.warn ("A syntax error was found in the code. Check that your class definitions are correct");
+                console.warn ("A syntax error was found in the code. Found a \"" + tokens[index].value  + "\" instead of a \"{\" after the class definition.");
                 return [];
             }
             // Gather all tokens within the curly braces
@@ -180,6 +180,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
  * 
  * @param {Token[]} tokens - An array of tokens to look through
  * @param {string} className - The name of the class these methods and attributes belong to
+ * @param {string} isParameters - If this is true, this method is parsing through a list of parameters in a function definition
  * 
  * @returns {Members} - A data structure containing arrays of Variable and Method Models.
  */
@@ -201,7 +202,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
 
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
-        } else /*if (IsMemberModifier(tokens[index]) || tokens[index].type === "KEYWORD" || tokens[index].value === className)*/ if (tokens[index].type !== "COMMENT") {
+        } else if (tokens[index].type !== "COMMENT") {
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
                 index ++;
@@ -256,15 +257,9 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 nameToken = tokens[index];
                 index ++;
             }
-            /*
-            if (index >= tokens.length) {
-                console.warn("A syntax error was found in the code. Check that your member definitions are correct");
-                return {attributes: [], methods: [], constructors: []};
-            }*/
             // Equal sign here means that this is a defined attribute
             if (index < tokens.length && tokens[index].value === "=") {
                 index ++;
-                // TODO: ACCOUNT FOR DEFINING MULTIPLE ATTRIBUTES AT ONCE
                 while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")")) {
                     valueTokens.push(tokens[index]);
                     index ++;
@@ -272,7 +267,6 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
             }
             // Opening parinthese here means that this is a method definition
             else if (index < tokens.length && tokens[index].value === "(") {
-                // TODO: GET METHOD PARAMETERS (RECURSION?)
                 valueTokens = GetTokensInScope(tokens, index);
                 let parameterMembers = LocateMembers(valueTokens, "", true);
                 index += valueTokens.length + 2;
@@ -291,13 +285,13 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                         modifiers: [...modifierTokens.map((t) => t.value)], 
                         return: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
                         name: nameToken.value, 
-                        parameters: [],
+                        parameters: [...parameterMembers.attributes],
                         generics: []
                     });
                 }
             }
             // Semicolon, comma, or closing parinthese here means that this is the end of a variable definition
-            if (index >= tokens.length || (tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")")) {
+            if ((isParameters && index >= tokens.length) || (index < tokens.length && (tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")"))) {
                 // Add a variable model to the return structure's attributes
                 ret.attributes.push({
                     modifiers: [...modifierTokens.map((t) => t.value)], 
@@ -305,10 +299,11 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                     name: nameToken.value, 
                     value: valueTokens.map((t) => t.value).toString().replaceAll(",", "")
                 });
+                
             } 
             // If there is a comma here, it means that the code is defining multiple attribues on one line
             while ((index < tokens.length && tokens[index].value === ",") && !isParameters) {
-                // TODO: THIS IS UNSAFE AAAAAAAAAAAAAA
+                // TODO: THIS IS UNSAFE
                 index ++;
                 nameToken.value = tokens[index].value;
                 index ++;
@@ -327,6 +322,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                     value: valueTokens.map((t) => t.value).toString().replaceAll(",", "")
                 });
             }
+            index ++;
         } else {
             index ++;
         }
