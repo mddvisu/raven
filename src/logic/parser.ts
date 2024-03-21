@@ -275,7 +275,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 if (!isConstructor) {
                     ret.methods.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
-                        return: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
+                        return: typeTokens.map((t) => t.value).toString().replace(/,/g,""),
                         name: nameToken.value, 
                         parameters: [...parameterMembers.attributes],
                         generics: []
@@ -283,7 +283,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 } else {
                     ret.constructors.push({
                         modifiers: [...modifierTokens.map((t) => t.value)], 
-                        return: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
+                        return: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                         name: nameToken.value, 
                         parameters: [...parameterMembers.attributes],
                         generics: []
@@ -295,9 +295,9 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 // Add a variable model to the return structure's attributes
                 ret.attributes.push({
                     modifiers: [...modifierTokens.map((t) => t.value)], 
-                    type: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
+                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replaceAll(",", "")
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,"")
                 });
                 
             } 
@@ -317,9 +317,9 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                 }
                 ret.attributes.push({
                     modifiers: [...modifierTokens.map((t) => t.value)], 
-                    type: typeTokens.map((t) => t.value).toString().replaceAll(",", ""), 
+                    type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replaceAll(",", "")
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,"")
                 });
             }
             index ++;

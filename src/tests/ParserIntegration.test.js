@@ -324,6 +324,59 @@ let tests = [
         }
       ]
 
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+
+    name: "Test generics",
+
+    code: 
+      `
+      class Generic<T> 
+      { 
+        static <T> void genericDisplay(T element)
+        {
+          System.out.println(element.getClass().getName()+ " = " + element);
+        }
+      }
+      `,
+
+    expect: 
+      [
+        {
+          name: "Generic",
+          attributes: [],
+          methods: [
+            {
+              name: "genericDisplay",
+              parameters: [
+                {
+                  name: "element",
+                  value: "",
+                  type: "T",
+                  modifiers: []
+                }
+              ],
+              return: "void",
+              modifiers: [
+                "static"
+              ],
+              generics: []
+            }
+          ],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [
+            "T"
+          ],
+          constructors: []
+        }
+      ]
+
   }
 ];
 
