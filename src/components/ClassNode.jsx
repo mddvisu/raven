@@ -59,6 +59,7 @@ function getClassColor(abstract, interFace) {
     return "bg-gradient-to-b from-[#181e29] to-[#465970]";
   }
 }
+
 function getClassIcon(abstract, interFace, isStatic){
   if (interFace) {
     return (
@@ -150,7 +151,7 @@ const ClassNode = memo(({ data, isConnectable }) => {
           </div>
         </div>
         <div className= "bg-gray-900 rounded-xl flex-grow flex flex-col mt-7">
-          <button value={data.classIndex} className="border-2 border-white m-2 rounded-xl bg-yellow-700 font-small text-white font-bold w-[40%] p-1"
+          <button value={data.classIndex} className="border-2 border-white m-2 rounded-xl bg-yellow-700 hover:bg-yellow-600 font-small text-white font-bold w-[40%] p-1"
             onClick={data.onClick}>{data.classData.name}
           </button>
           <div className="flex items-center">

@@ -8,7 +8,76 @@ const Home = () => {
   const [data, setData] = useState([]);
 
   async function retrieveClassModel() {
-    let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory();
+    //let stuff = await RetrieveJavaClassModelBySelectingProjectDirectory();
+    const stuff =  [
+      {
+        name: " Shape Class",
+        attributes: [],
+        methods: [],
+        abstract: false,
+        interface: true,
+        access: "private",
+        extends: "",
+        static: false,
+        implements: []
+      },
+      {
+        name: " Box Class",
+        attributes: [],
+        methods: [],
+        abstract: false,
+        interface: false,
+        access: "private",
+        extends: "",
+        static: true,
+        implements: []
+      },
+      {
+        name: "Car",
+        attributes: [
+        {
+          name: "speed",
+          value: undefined,
+          type: "int",
+          access: "private",
+          static: false,
+          final: false
+        },
+        {
+          name: "velocity",
+          value: undefined,
+          type: "float",
+          access: "public",
+          static: false,
+          final: false
+        }
+    ],
+        methods: [
+          {
+            name: "getSpeed", 
+            parameters: [],
+            return: "",
+            access: "private", 
+            static: false, 
+            final: true
+          },
+          {
+            name: "brake", 
+            parameters: [],
+            return: "",
+            access: "private", 
+            static: true, 
+            final: false
+          }
+        ],
+        abstract: true,
+        interface: false,
+        access: "public",
+        extends: "",
+        static: true,
+        implements: []
+      }
+    ]
     setData(stuff);
   }
 
