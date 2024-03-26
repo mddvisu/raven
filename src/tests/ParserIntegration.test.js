@@ -409,6 +409,47 @@ let tests = [
         }
       ]
 
+  },
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+  {
+
+    name: "Test new instance attribute",
+
+    code: 
+      `
+      class Instance
+      { 
+        MyObject obj = new MyObject(x, y);
+      }
+      `,
+
+    expect: 
+      [
+        {
+          name: "Instance",
+          attributes: [
+            {
+              name: "obj",
+              value: "MyObject",
+              type: "MyObject",
+              modifiers: [],
+              line: 4
+            }
+          ],
+          methods: [],
+          interface: false,
+          extends: "",
+          implements: [],
+          modifiers: [],
+          generics: [],
+          constructors: [],
+          line: 2,
+          filePath: ""
+        }
+      ]
+
   }
 ];
 

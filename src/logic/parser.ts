@@ -261,9 +261,16 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
             // Equal sign here means that this is a defined attribute
             if (index < tokens.length && tokens[index].value === "=") {
                 index ++;
-                while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === "," || tokens[index].value === ")")) {
-                    valueTokens.push(tokens[index]);
-                    index ++;
+                while (index < tokens.length && !(tokens[index].value === ";" || tokens[index].value === ",")) {
+                    if (tokens[index].value === "(") {
+                        let tokensInScope = GetTokensInScope(tokens, index);
+                        index += tokensInScope.length + 2;
+                    } else if (tokens[index].value === "new") {
+                        index ++;
+                    } else {
+                        valueTokens.push(tokens[index]);
+                        index ++;
+                    }
                 }
             }
             // Opening parinthese here means that this is a method definition
