@@ -26,7 +26,9 @@ let tests = [
           implements: [],
           modifiers: [],
           generics: [],
-          constructors: []
+          constructors: [],
+          line: 1,
+          filePath: ""
         }
       ]
 
@@ -60,7 +62,8 @@ let tests = [
                   name: "args",
                   value: "",
                   type: "String[]",
-                  modifiers: []
+                  modifiers: [],
+                  line: 3
                 }
               ],
               return: "void",
@@ -68,7 +71,8 @@ let tests = [
                 "public",
                 "static"
               ],
-              generics: []
+              generics: [],
+              line: 3
             }
           ],
           interface: false,
@@ -76,7 +80,9 @@ let tests = [
           implements: [],
           modifiers: [],
           generics: [],
-          constructors: []
+          constructors: [],
+          line: 2,
+          filePath: ""
         }
       ]
 
@@ -107,7 +113,8 @@ let tests = [
               modifiers: [
                 "public",
                 "static"
-              ]
+              ],
+              line: 3
             }
           ],
           methods: [],
@@ -116,7 +123,9 @@ let tests = [
           implements: [],
           modifiers: [],
           generics: [],
-          constructors: []
+          constructors: [],
+          line: 2,
+          filePath: ""
         }
       ]
 
@@ -147,7 +156,8 @@ let tests = [
               modifiers: [
                 "private",
                 "final"
-              ]
+              ],
+              line: 3
             }
           ],
           methods: [],
@@ -156,7 +166,9 @@ let tests = [
           implements: [],
           modifiers: [],
           generics: [],
-          constructors: []
+          constructors: [],
+          line: 2,
+          filePath: ""
         }
       ]
 
@@ -187,7 +199,8 @@ let tests = [
               name: "x",
               value: "",
               type: "double",
-              modifiers: []
+              modifiers: [],
+              line: 3
             }
           ],
           methods: [],
@@ -206,14 +219,18 @@ let tests = [
                   name: "x",
                   value: "",
                   type: "double",
-                  modifiers: []
+                  modifiers: [],
+                  line: 4
                 }
               ],
               return: "",
               modifiers: [],
-              generics: []
+              generics: [],
+              line: 4
             }
-          ]
+          ],
+          line: 2,
+          filePath: ""
         }
       ]
 
@@ -246,7 +263,8 @@ let tests = [
               modifiers: [
                 "private",
                 "static"
-              ]
+              ],
+              line: 3
             },
             {
               name: "y",
@@ -255,7 +273,8 @@ let tests = [
               modifiers: [
                 "private",
                 "static"
-              ]
+              ],
+              line: 3
             },
             {
               name: "z",
@@ -264,7 +283,8 @@ let tests = [
               modifiers: [
                 "private",
                 "static"
-              ]
+              ],
+              line: 3
             },
             {
               name: "i",
@@ -273,7 +293,8 @@ let tests = [
               modifiers: [
                 "public",
                 "final"
-              ]
+              ],
+              line: 4
             },
             {
               name: "j",
@@ -282,7 +303,8 @@ let tests = [
               modifiers: [
                 "public",
                 "final"
-              ]
+              ],
+              line: 4
             },
             {
               name: "k",
@@ -291,25 +313,29 @@ let tests = [
               modifiers: [
                 "public",
                 "final"
-              ]
+              ],
+              line: 4
             },
             {
               name: "f",
               value: "",
               type: "short",
-              modifiers: []
+              modifiers: [],
+              line: 5
             },
             {
               name: "g",
               value: "",
               type: "short",
-              modifiers: []
+              modifiers: [],
+              line: 5
             },
             {
               name: "h",
               value: "",
               type: "short",
-              modifiers: []
+              modifiers: [],
+              line: 5
             },
           ],
           methods: [],
@@ -320,7 +346,9 @@ let tests = [
             "public"
           ],
           generics: [],
-          constructors: []
+          constructors: [],
+          line: 2,
+          filePath: ""
         }
       ]
 
@@ -356,14 +384,16 @@ let tests = [
                   name: "element",
                   value: "",
                   type: "T",
-                  modifiers: []
+                  modifiers: [],
+                  line: 4
                 }
               ],
               return: "void",
               modifiers: [
                 "static"
               ],
-              generics: []
+              generics: [],
+              line: 4
             }
           ],
           interface: false,
@@ -373,7 +403,9 @@ let tests = [
           generics: [
             "T"
           ],
-          constructors: []
+          constructors: [],
+          line: 2,
+          filePath: ""
         }
       ]
 

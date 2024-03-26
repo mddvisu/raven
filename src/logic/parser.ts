@@ -104,7 +104,7 @@ export function LocateClasses(tokens: Token[]): ClassModel[] {
         }
         // If we run into a class modifier, or the class or interface keywords, this is a class definition, and we should start gathering the symbols
         else if (IsClassModifier(tokens[index]) || IsClassKeyword(tokens[index])) {
-            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: [], constructors: []};
+            let model: ClassModel = {modifiers: [], generics: [], interface: false, name: "", extends: "", implements: [], attributes: [], methods: [], constructors: [], filePath: "", line: tokens[index].line};
             // Gather modifiers
             while (index < tokens.length && IsClassModifier(tokens[index])) {
                 model.modifiers.push(tokens[index].value);
@@ -203,6 +203,7 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
         if (tokens[index].value === "@") {
             index = SkipAnnotation(tokens, index);
         } else if (tokens[index].type !== "COMMENT") {
+            let line = tokens[index].line;
             while (index < tokens.length && IsMemberModifier(tokens[index])) {
                 modifierTokens.push(tokens[index]);
                 index ++;
@@ -278,7 +279,8 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                         return: typeTokens.map((t) => t.value).toString().replace(/,/g,""),
                         name: nameToken.value, 
                         parameters: [...parameterMembers.attributes],
-                        generics: []
+                        generics: [],
+                        line: line
                     });
                 } else {
                     ret.constructors.push({
@@ -286,7 +288,8 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                         return: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                         name: nameToken.value, 
                         parameters: [...parameterMembers.attributes],
-                        generics: []
+                        generics: [],
+                        line: line
                     });
                 }
             }
@@ -297,7 +300,8 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                     modifiers: [...modifierTokens.map((t) => t.value)], 
                     type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,"")
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
+                    line: line
                 });
                 
             } 
@@ -319,7 +323,8 @@ export function LocateMembers(tokens: Token[], className: string = "", isParamet
                     modifiers: [...modifierTokens.map((t) => t.value)], 
                     type: typeTokens.map((t) => t.value).toString().replace(/,/g,""), 
                     name: nameToken.value, 
-                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,"")
+                    value: valueTokens.map((t) => t.value).toString().replace(/,/g,""),
+                    line: line
                 });
             }
             index ++;
