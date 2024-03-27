@@ -9,7 +9,7 @@ import 'reactflow/dist/style.css';
 import './ClassNode.css';
 import dagre from 'dagre';
 import ClassInspector from './ClassInspector';
-import ReactFlow, { Controls, Background, useNodesState, useEdgesState, MarkerType } from 'reactflow';
+import ReactFlow, { Controls, Background, useNodesState, useEdgesState, MarkerType, useReactFlow } from 'reactflow';
 import SidebarTab from './SidebarTab';
 
 // Node types
@@ -52,6 +52,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
     return { nodes, edges };
 };
 
+
 const ClosableTab = ({ classData }) => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -61,6 +62,41 @@ const ClosableTab = ({ classData }) => {
     const [tabs, setTabs] = useState([]);
     const [panels, setPanels] = useState([]);
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
+
+    //NEW CODE
+    const [focusOnNode, setFocusOnNode] = useState(null);
+
+    const childRef = useRef(null);
+    /*
+
+    const handleFocusOnNode = (nodeId) => {
+        if (reactFlowInstance) {
+            reactFlowInstance.fitView({ nodeId, fitViewOptions: { padding: 0.2 } });
+        }
+    };
+    */
+    const handleFocusOnNode = (nodeId) => {
+        if (reactFlowInstance) {
+            reactFlowInstance.setViewport(
+                {
+                    x: -nodes[nodeId].position.x + 200,
+                    y: -nodes[nodeId].position.y + 25,
+                    zoom: 1,
+                },
+
+                console.log("x position: " + nodes[nodeId].position.x),
+                console.log("y position: " + nodes[nodeId].position.y),
+                { duration: 800 }
+            );
+            console.log("Helloo: " + nodeId)
+            //console.log("x position: " + nodes[nodeId].position.x)
+            //console.log("next: " + nodes[nodeId].position.x)
+        }
+
+    };
+
+    const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    //____
 
     const prevClassDataIdRef = useRef();
     useEffect(() => {
@@ -149,6 +185,9 @@ const ClosableTab = ({ classData }) => {
             setNodes((nds) =>
                 classData.map((cl, i) => {
                     let node = {
+                        //New code
+                        name: classData[i].name,
+                        //
                         id: (i + 1).toString(),
                         type: 'classNode',
                         position: {
@@ -158,9 +197,19 @@ const ClosableTab = ({ classData }) => {
                         data: {
                             onClick: onClick,
                             classData: cl,
-                            classIndex: i
+                            classIndex: i,
                         }
                     }
+
+
+                    //NEW CODE
+                    console.log("Node Information: ", nodes);
+                    console.log("node name: " + node.name);
+                    console.log(node.id + " " + node.position.x + " " + node.position.x);
+                    console.log(classData);
+                    console.log(classData[0]);
+                    //___
+
                     return node;
                 })
             );
@@ -226,12 +275,20 @@ const ClosableTab = ({ classData }) => {
                             onEdgesChange={onEdgesChange}
                             proOptions={{ hideAttribution: true }}
                             nodeTypes={nodeTypes}
+                            //NEW CODE
+                            onInit={setReactFlowInstance}
+                        //NEW CODE
                         >
                             <Controls />
                             {/* <Background variant="cross" gap={12} size={1} /> */}
                         </ReactFlow>
                     </div>
-                    <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                    <div>
+                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
+                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("0")}>Node0</button>
+                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("1")}>Node1</button>
+                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("2")}>Node2</button>
+                    </div>
                 </TabPanel>
                 {panels.map((panel) => (
                     <TabPanel key={panel.value} value={panel.value}>
@@ -239,8 +296,19 @@ const ClosableTab = ({ classData }) => {
                     </TabPanel>
                 ))}
             </TabContext>
+            <div>
+
+                <SidebarTab handleFocusClass={handleFocusOnNode} />
+
+            </div>
         </div>
     );
 };
 
-export default ClosableTab;
+export default ClosableTab; handleFocusOnNode;
+/*
+<div>
+                    <SidebarTab ref={childRef} parentFunction={handleFocusOnNode} />
+                    <SidebarTab classData={this.classData} />
+                </div>
+                */
