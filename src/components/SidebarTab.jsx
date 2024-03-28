@@ -77,7 +77,7 @@ const SidebarTab = ({ sidetabs, handleFocusClass }) => {
             <h1 className="title">Class Names:</h1>
             <ul className=''>
                 {sidetabs?.map((classData, index) => (
-                    <button key={index} className="class-button" onClick={() => handleFocusClass(index)}>
+                    <button key={index} className="class-button" onClick={() => handleFocusClass.current.focusOnNode(index)}>
                         {classData.name}
                     </button>
                 ))}

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { RetrieveJavaClassModelBySelectingProjectDirectory } from '../logic/folderUtils';
 import RavenLogo from '../assets/raven-logo.png';
 import { CloseableTab, SidebarTab } from '../components';
@@ -12,6 +12,8 @@ const Home = () => {
     setData(stuff);
   }
 
+  const focusRef = useRef();
+
   return (
     <div className="text-white mt-4 text-center">
       <div className="bg-[#68666c] flex border-4 rounded-3xl">
@@ -24,14 +26,14 @@ const Home = () => {
               <button className='rounded-3xl' onClick={retrieveClassModel}>Open Project Directory</button>
             </header>
             <div className=''>
-              <SidebarTab sidetabs={data} />
+              <SidebarTab sidetabs={data} handleFocusClass={focusRef} />
             </div>
 
           </div>
         </div>
         <div className="w-6/8 bg-[#1b1b24] flex p-2 m-2 rounded-3xl border w-[680px] h-[580px] text-white">
           <div>
-            <CloseableTab classData={data} />
+            <CloseableTab classData={data} focusRef={focusRef} />
           </div>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useImperativeHandle} from "react";
 import { useInstance } from 'reactflow';
 import { Tab } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
@@ -53,7 +53,7 @@ const getLayoutedElements = (nodes, edges, direction = 'TB') => {
 };
 
 
-const ClosableTab = ({ classData }) => {
+const ClosableTab = ({ classData, focusRef }) => {
 
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -67,33 +67,24 @@ const ClosableTab = ({ classData }) => {
     const [focusOnNode, setFocusOnNode] = useState(null);
 
     const childRef = useRef(null);
-    /*
+    
+    useImperativeHandle(focusRef, () => ({
 
-    const handleFocusOnNode = (nodeId) => {
-        if (reactFlowInstance) {
-            reactFlowInstance.fitView({ nodeId, fitViewOptions: { padding: 0.2 } });
+        focusOnNode(nodeId) {
+            if (reactFlowInstance) {
+                reactFlowInstance.setViewport(
+                    {
+                        x: -nodes[nodeId].position.x + 200,
+                        y: -nodes[nodeId].position.y + 25,
+                        zoom: 1,
+                    },
+                    { duration: 800 }
+                );
+            }
+    
         }
-    };
-    */
-    const handleFocusOnNode = (nodeId) => {
-        if (reactFlowInstance) {
-            reactFlowInstance.setViewport(
-                {
-                    x: -nodes[nodeId].position.x + 200,
-                    y: -nodes[nodeId].position.y + 25,
-                    zoom: 1,
-                },
-
-                console.log("x position: " + nodes[nodeId].position.x),
-                console.log("y position: " + nodes[nodeId].position.y),
-                { duration: 800 }
-            );
-            console.log("Helloo: " + nodeId)
-            //console.log("x position: " + nodes[nodeId].position.x)
-            //console.log("next: " + nodes[nodeId].position.x)
-        }
-
-    };
+    
+      }));
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     //____
@@ -296,16 +287,11 @@ const ClosableTab = ({ classData }) => {
                     </TabPanel>
                 ))}
             </TabContext>
-            <div>
-
-                <SidebarTab handleFocusClass={handleFocusOnNode} />
-
-            </div>
         </div>
     );
 };
 
-export default ClosableTab; handleFocusOnNode;
+export default ClosableTab;// handleFocusOnNode;
 /*
 <div>
                     <SidebarTab ref={childRef} parentFunction={handleFocusOnNode} />
