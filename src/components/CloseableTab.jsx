@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useImperativeHandle} from "react";
+import { useState, useEffect, useRef, useImperativeHandle } from "react";
 import { useInstance } from 'reactflow';
 import { Tab } from '@mui/material';
 import { TabList, TabContext, TabPanel } from '@mui/lab';
@@ -63,28 +63,28 @@ const ClosableTab = ({ classData, focusRef }) => {
     const [panels, setPanels] = useState([]);
     const [openTabsCount, setOpenTabsCount] = useState(1); // Initial count with main tab
 
-    //NEW CODE
+    // Handle focus on node from side tab
     const [focusOnNode, setFocusOnNode] = useState(null);
 
     const childRef = useRef(null);
-    
+
     useImperativeHandle(focusRef, () => ({
 
         focusOnNode(nodeId) {
             if (reactFlowInstance) {
                 reactFlowInstance.setViewport(
                     {
-                        x: -nodes[nodeId].position.x + 200,
-                        y: -nodes[nodeId].position.y + 25,
+                        x: -nodes[nodeId].position.x + 150,
+                        y: -nodes[nodeId].position.y + 40,
                         zoom: 1,
                     },
                     { duration: 800 }
                 );
             }
-    
+
         }
-    
-      }));
+
+    }));
 
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     //____
@@ -266,9 +266,7 @@ const ClosableTab = ({ classData, focusRef }) => {
                             onEdgesChange={onEdgesChange}
                             proOptions={{ hideAttribution: true }}
                             nodeTypes={nodeTypes}
-                            //NEW CODE
                             onInit={setReactFlowInstance}
-                        //NEW CODE
                         >
                             <Controls />
                             {/* <Background variant="cross" gap={12} size={1} /> */}
@@ -276,9 +274,6 @@ const ClosableTab = ({ classData, focusRef }) => {
                     </div>
                     <div>
                         <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => onLayout('TB')}>LAYOUT</button>
-                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("0")}>Node0</button>
-                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("1")}>Node1</button>
-                        <button style={{ marginTop: "50px", border: "4px solid white" }} onClick={() => handleFocusOnNode("2")}>Node2</button>
                     </div>
                 </TabPanel>
                 {panels.map((panel) => (
@@ -291,10 +286,4 @@ const ClosableTab = ({ classData, focusRef }) => {
     );
 };
 
-export default ClosableTab;// handleFocusOnNode;
-/*
-<div>
-                    <SidebarTab ref={childRef} parentFunction={handleFocusOnNode} />
-                    <SidebarTab classData={this.classData} />
-                </div>
-                */
+export default ClosableTab;
